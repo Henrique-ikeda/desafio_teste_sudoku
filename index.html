@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sudoku binário</title>
+</head>
+<body>
+  <!--
+    ESQUELETO DA TELA (contrato da seção 3 do PLANEJAMENTO.md).
+    Elementos fixos, VAZIOS: sem texto, sem valor e sem atributos de estado
+    (data-fixa, data-conflito, disabled, hidden). Os testes abrem este HTML.
+    As células (celula-L-C) seriam criadas pelo jogo, que não é implementado.
+  -->
+  <header>
+    <span data-testid="vazias"></span>
+    <button data-testid="btn-limpar"></button>
+    <button data-testid="btn-desfazer"></button>
+    <button data-testid="btn-novo-jogo"></button>
+  </header>
+  <main>
+    <div data-testid="grade"></div>
+  </main>
+  <footer>
+    <p data-testid="mensagem"></p>
+  </footer>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
