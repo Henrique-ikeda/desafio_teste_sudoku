@@ -135,3 +135,26 @@ test.each(EXCESSOS)('TC-SB-26 mais de três nas combinações que faltam ($caso)
   }
   expect(posicoesEmConflito()).toEqual([...posicoes].sort());
 });
+
+// TC-SB-27: fronteira da regra 2 — exatamente três iguais (sem trinca) ainda não é erro; o quarto é.
+test('TC-SB-27 exatamente três iguais sem trinca não é conflito', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  await preencher(user, '1-1', '0');
+  await preencher(user, '1-3', '0');
+  await preencher(user, '1-5', '0');
+
+  // Com três: as três mostram 0 e nenhuma célula está em conflito.
+  for (const pos of ['1-1', '1-3', '1-5']) {
+    expect(celula(pos)).toHaveTextContent(/^0$/);
+  }
+  expect(posicoesEmConflito()).toEqual([]);
+
+  await preencher(user, '1-6', '0');
+
+  // Com o quarto 0: todas as quatro em conflito e nenhuma outra.
+  expect(celula('1-6')).toHaveTextContent(/^0$/);
+  for (const pos of ['1-1', '1-3', '1-5', '1-6']) {
+    expect(celula(pos)).toHaveAttribute('data-conflito', 'true');
+  }
+  expect(posicoesEmConflito()).toEqual(['1-1', '1-3', '1-5', '1-6']);
+});
