@@ -189,6 +189,8 @@ Cada integrante é **dono de arquivos de teste diferentes** (coluna "Arquivos").
 | **F4** Linhas e colunas iguais | `felipe/f4-iguais` | tests/regras.spec.js | 17, 18 |
 | **F5** Vitória e novo jogo | `felipe/f5-vitoria` | tests/fim-de-jogo.spec.js | 20, 21, 22, 23 |
 
+**IDs reservados:** `TC-SB-25` a `TC-SB-30` ficam com o Felipe, para casos adicionais que fecham lacunas da matriz de cobertura (trinca em todas as combinações e nas bordas, excesso nas combinações que faltam, fronteira 3 × 4, conflito que some depois de corrigir ou de Limpar, novo jogo depois da vitória). Cada um entra na seção 5 no PR da tarefa que o usa (F2–F5). Casos novos do Henrique começam no `TC-SB-31`.
+
 ## 5. Casos de teste (interface)
 
 Salvo quando dito outro, os passos partem de células vazias.
