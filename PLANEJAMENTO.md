@@ -4,8 +4,8 @@ Sudoku binário (Takuzu) em grade **6 × 6**: **Casos de teste de interface em J
 
 | Integrante | GitHub | Papel neste repositório |
 |---|---|---|
-| Henrique (RA_HENRIQUE) | Henrique-ikeda | Setup do projeto e testes de: grade, preenchimento, vazias, limpar e desfazer (tarefas A1–A5) |
-| Felipe (RA_FELIPE) | GITHUB_FELIPE | CI, README e testes de: regras (conflitos), vitória e novo jogo (tarefas F1–F5) |
+| Henrique Kendi Ikeda (RA 24039456-2) | Henrique-ikeda | Setup do projeto e testes de: grade, preenchimento, vazias, limpar e desfazer (tarefas A1–A5) |
+| Felipe Galeti Gôngora (RA 24036480-2) | FGaleti | CI, README e testes de: regras (conflitos), vitória e novo jogo (tarefas F1–F5) |
 
 ---
 
@@ -231,7 +231,7 @@ Salvo quando dito outro, os passos partem de células vazias.
 
 Para o professor enxergar a contribuição dos dois, **cada um commita da própria conta**:
 
-1. **Henrique** cria o repositório e adiciona `GITHUB_FELIPE` como colaborador (Settings → Collaborators). **Felipe** aceita o convite.
+1. **Henrique** cria o repositório e adiciona `FGaleti` como colaborador (Settings → Collaborators). **Felipe** aceita o convite.
 2. Cada um configura o Git com o e-mail **cadastrado na própria conta do GitHub** (senão o commit não conta como contribuição):
    ```bash
    git config user.name "Seu Nome"
