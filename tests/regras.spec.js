@@ -19,3 +19,16 @@ test('TC-SB-13 três iguais na linha', async () => {
   expect(celula('1-4')).toHaveAttribute('data-conflito', 'false');
   expect(posicoesEmConflito()).toEqual(['1-1', '1-2', '1-3']);
 });
+
+test('TC-SB-14 três iguais na coluna', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  await preencher(user, '1-1', '1');
+  await preencher(user, '2-1', '1');
+  await preencher(user, '3-1', '1');
+
+  for (const pos of ['1-1', '2-1', '3-1']) {
+    expect(celula(pos)).toHaveTextContent(/^1$/);
+    expect(celula(pos)).toHaveAttribute('data-conflito', 'true');
+  }
+  expect(posicoesEmConflito()).toEqual(['1-1', '2-1', '3-1']);
+});
