@@ -82,7 +82,7 @@ npx jest tests/<arquivo>.spec.js -t "TC-SB-NN"   # um caso só
 | TC-SB-26 | Mais de três nas combinações que faltam | `tests/regras.spec.js` | Em cada caso, as quatro células mostram o valor e têm `data-conflito` = `true`; nenhuma outra célula em conflito | Felipe |
 | TC-SB-27 | Exatamente três iguais sem trinca não é conflito | `tests/regras.spec.js` | Com três 0: as três mostram "0" e nenhuma célula está em conflito. Com o quarto 0: `1-1`, `1-3`, `1-5` e `1-6` com `data-conflito` = `true` e nenhuma outra | Felipe |
 | TC-SB-28 | Conflito de linhas iguais some ao corrigir | `tests/regras.spec.js` | Antes: as 12 células das linhas 1 e 2 em conflito. Depois: `2-6` vazia e nenhuma célula em conflito | Felipe |
-| TC-SB-29 | Novo jogo depois da vitória desbloqueia o jogo | `tests/fim-de-jogo.spec.js` | `mensagem` vazia; `1-1` = "0"; `vazias` = 26 | Felipe |
+| TC-SB-29 | Novo jogo depois da vitória desbloqueia o jogo | `tests/fim-de-jogo.spec.js` | `mensagem` vazia; `1-1` = "0"; `vazias` = 26; `btn-desfazer` habilitado | Felipe |
 | TC-SB-30 | Conflito some depois do Limpar | `tests/regras.spec.js` | Antes: as três em conflito. Depois: `1-1`, `1-2` e `1-3` vazias; nenhuma célula em conflito; `vazias` = 36 | Felipe |
 
 ## Estrutura
