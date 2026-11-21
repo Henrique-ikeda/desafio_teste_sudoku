@@ -1,5 +1,5 @@
 // Casos de teste das regras (conflitos) — tarefas F2, F3 e F4 do Felipe. Contrato: seções 1, 3 e 5 do PLANEJAMENTO.md.
-import { abrirJogo, celula, preencher, celulasEmConflito, PUZZLE_PADRAO, PUZZLE_VAZIO } from './helpers.js';
+import { abrirJogo, celula, preencher, celulasEmConflito, screen, PUZZLE_PADRAO, PUZZLE_VAZIO } from './helpers.js';
 
 // Posições 'L-C' das células com data-conflito = "true", em ordem: para conferir o conjunto EXATO
 // (pega implementação que marca demais, como a linha inteira, ou de menos).
@@ -157,4 +157,24 @@ test('TC-SB-27 exatamente três iguais sem trinca não é conflito', async () =>
     expect(celula(pos)).toHaveAttribute('data-conflito', 'true');
   }
   expect(posicoesEmConflito()).toEqual(['1-1', '1-3', '1-5', '1-6']);
+});
+
+test('TC-SB-30 conflito some depois do Limpar', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  await preencher(user, '1-1', '0');
+  await preencher(user, '1-2', '0');
+  await preencher(user, '1-3', '0');
+
+  // Antes: as três em conflito.
+  expect(posicoesEmConflito()).toEqual(['1-1', '1-2', '1-3']);
+
+  await user.click(screen.getByTestId('btn-limpar'));
+
+  // Depois: as três vazias, nada em conflito, 36 vazias.
+  for (const pos of ['1-1', '1-2', '1-3']) {
+    expect(celula(pos)).toHaveTextContent(/^$/);
+    expect(celula(pos)).toHaveAttribute('data-conflito', 'false');
+  }
+  expect(posicoesEmConflito()).toEqual([]);
+  expect(screen.getByTestId('vazias')).toHaveTextContent(/^36$/);
 });
