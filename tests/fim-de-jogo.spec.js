@@ -80,3 +80,18 @@ test('TC-SB-23 novo jogo', async () => {
   expect(screen.getByTestId('mensagem')).toHaveTextContent(/^$/);
   expect(posicoesEmConflito()).toEqual([]);
 });
+
+test('TC-SB-29 novo jogo depois da vitória desbloqueia o jogo', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_PADRAO });
+  await preencherSolucao(user); // vitória (cenário do TC-SB-20)
+  expect(screen.getByTestId('mensagem')).toHaveTextContent(/^Resolvido!$/);
+
+  await user.click(screen.getByTestId('btn-novo-jogo'));
+  expect(screen.getByTestId('mensagem')).toHaveTextContent(/^$/);
+  expect(celula('1-1')).toHaveTextContent(/^$/);
+
+  await user.click(celula('1-1')); // a grade voltou a aceitar cliques
+  expect(celula('1-1')).toHaveTextContent(/^0$/);
+  expect(screen.getByTestId('vazias')).toHaveTextContent(/^26$/);
+  expect(screen.getByTestId('btn-desfazer')).not.toBeDisabled();
+});
