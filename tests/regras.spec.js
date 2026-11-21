@@ -68,3 +68,18 @@ test.each(TRINCAS)('TC-SB-25 três iguais em todas as combinações e nas bordas
   }
   expect(posicoesEmConflito()).toEqual(posicoes);
 });
+
+test('TC-SB-15 mais de três 0 na linha', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  await preencher(user, '1-1', '0');
+  await preencher(user, '1-3', '0');
+  await preencher(user, '1-5', '0');
+  await preencher(user, '1-6', '0');
+
+  for (const pos of ['1-1', '1-3', '1-5', '1-6']) {
+    expect(celula(pos)).toHaveTextContent(/^0$/);
+    expect(celula(pos)).toHaveAttribute('data-conflito', 'true');
+  }
+  // Todas as células com aquele número na linha, não só a quarta.
+  expect(posicoesEmConflito()).toEqual(['1-1', '1-3', '1-5', '1-6']);
+});
