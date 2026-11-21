@@ -83,3 +83,17 @@ test('TC-SB-15 mais de três 0 na linha', async () => {
   // Todas as células com aquele número na linha, não só a quarta.
   expect(posicoesEmConflito()).toEqual(['1-1', '1-3', '1-5', '1-6']);
 });
+
+test('TC-SB-16 mais de três 1 na coluna', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  await preencher(user, '1-1', '1');
+  await preencher(user, '3-1', '1');
+  await preencher(user, '5-1', '1');
+  await preencher(user, '6-1', '1');
+
+  for (const pos of ['1-1', '3-1', '5-1', '6-1']) {
+    expect(celula(pos)).toHaveTextContent(/^1$/);
+    expect(celula(pos)).toHaveAttribute('data-conflito', 'true');
+  }
+  expect(posicoesEmConflito()).toEqual(['1-1', '3-1', '5-1', '6-1']);
+});
