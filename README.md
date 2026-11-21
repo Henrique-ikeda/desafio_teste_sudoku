@@ -46,7 +46,7 @@ npx jest tests/<arquivo>.spec.js -t "TC-SB-NN"   # um caso só
 - **Testes de interface:** cada teste abre o `index.html` do jogo pela função `abrirJogo(params)` de `tests/helpers.js`, clica como um jogador e confere o que aparece na tela. Os testes não chamam funções internas do jogo.
 - **Elementos da tela:** encontrados pelo atributo `data-testid` (`celula-<linha>-<coluna>`, `vazias`, `mensagem`, `btn-limpar`, `btn-desfazer`, `btn-novo-jogo`). O valor da célula é o texto (`0`, `1` ou vazio); `data-fixa` e `data-conflito` dizem se ela é do puzzle e se está quebrando uma regra.
 - **Sem depender de sorte:** o puzzle é passado pelo parâmetro de URL `puzzle` (36 caracteres: `0`, `1` ou `.`). `PUZZLE_PADRAO` tem 9 células fixas e solução única (`SOLUCAO_PADRAO`, conferida por script); `PUZZLE_VAZIO` deixa a grade toda livre para montar cada situação de regra em poucos cliques.
-- **Rastreabilidade:** cada teste tem no título o ID do caso (`TC-SB-NN`), o mesmo da tabela abaixo e da seção 5 do PLANEJAMENTO.md. A [matriz de cobertura](docs/MATRIZ-COBERTURA.md) liga cada regra do jogo aos seus casos.
+- **Rastreabilidade:** cada teste tem no título o ID do caso (`TC-SB-NN`), o mesmo da tabela abaixo e da seção 5 do PLANEJAMENTO.md. A [matriz de cobertura](docs/MATRIZ-COBERTURA.md) liga cada regra do jogo aos seus casos. Os testes do Felipe foram conferidos contra uma implementação de referência (fora do repositório) e por mutação: [docs/VALIDACAO-TESTES-FELIPE.md](docs/VALIDACAO-TESTES-FELIPE.md).
 - **Metodologia:** TDD, um caso de teste por vez: escrever, rodar, ver falhar pelo motivo certo e fazer o commit `test:`. Uso de IA documentado em [docs/TDD-COM-IA.md](docs/TDD-COM-IA.md).
 - **Integração contínua:** o GitHub Actions ([`.github/workflows/testes.yml`](.github/workflows/testes.yml)) roda `npm ci` e `npm run verificar` em todo push e Pull Request, com Node 18, 20 e 22 no Ubuntu e no Windows. O relatório JSON do Jest e a saída do verificador ficam como artefatos de cada execução. O job `verificar:completo`, que também exige um teste para cada TC do plano, roda sob demanda (*Run workflow*) ou em PR com o rótulo `entrega`.
 
@@ -94,5 +94,5 @@ tests/helpers.js              abrirJogo(), PUZZLE_PADRAO e atalhos
 tests/*.spec.js               casos de teste
 scripts/verificar-testes.mjs  verificador (npm run verificar e CI)
 PLANEJAMENTO.md               regras, contrato, tarefas e casos de teste
-docs/                         matriz de cobertura e TDD com IA
+docs/                         matriz de cobertura, TDD com IA e validação dos testes
 ```
