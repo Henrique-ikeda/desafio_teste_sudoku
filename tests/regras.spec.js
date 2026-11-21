@@ -1,5 +1,5 @@
 // Casos de teste das regras (conflitos) — tarefas F2, F3 e F4 do Felipe. Contrato: seções 1, 3 e 5 do PLANEJAMENTO.md.
-import { abrirJogo, celula, preencher, celulasEmConflito, PUZZLE_VAZIO } from './helpers.js';
+import { abrirJogo, celula, preencher, celulasEmConflito, PUZZLE_PADRAO, PUZZLE_VAZIO } from './helpers.js';
 
 // Posições 'L-C' das células com data-conflito = "true", em ordem: para conferir o conjunto EXATO
 // (pega implementação que marca demais, como a linha inteira, ou de menos).
@@ -31,4 +31,22 @@ test('TC-SB-14 três iguais na coluna', async () => {
     expect(celula(pos)).toHaveAttribute('data-conflito', 'true');
   }
   expect(posicoesEmConflito()).toEqual(['1-1', '2-1', '3-1']);
+});
+
+test('TC-SB-24 conflito também marca células fixas', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_PADRAO });
+  await preencher(user, '4-2', '0'); // a linha 4 fica 0000..
+
+  // As fixas 4-1, 4-3 e 4-4 valem 0 no PUZZLE_PADRAO (seção 3).
+  for (const pos of ['4-1', '4-3', '4-4']) {
+    expect(celula(pos)).toHaveAttribute('data-fixa', 'true');
+    expect(celula(pos)).toHaveTextContent(/^0$/);
+  }
+  expect(celula('4-2')).toHaveAttribute('data-fixa', 'false');
+  expect(celula('4-2')).toHaveTextContent(/^0$/);
+
+  for (const pos of ['4-1', '4-2', '4-3', '4-4']) {
+    expect(celula(pos)).toHaveAttribute('data-conflito', 'true');
+  }
+  expect(posicoesEmConflito()).toEqual(['4-1', '4-2', '4-3', '4-4']);
 });
