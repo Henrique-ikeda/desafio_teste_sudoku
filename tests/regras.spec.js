@@ -119,3 +119,19 @@ test('TC-SB-19 conflito some ao corrigir', async () => {
   }
   expect(posicoesEmConflito()).toEqual([]);
 });
+
+// TC-SB-26: o excesso nas combinações que os TCs 15/16 não cobrem (1 na linha, 0 na coluna), sem três seguidos.
+const EXCESSOS = [
+  { caso: 'a', descricao: 'quatro 1 na linha', posicoes: ['1-1', '1-3', '1-5', '1-6'], valor: '1' },
+  { caso: 'b', descricao: 'quatro 0 na coluna', posicoes: ['1-1', '3-1', '5-1', '6-1'], valor: '0' },
+];
+test.each(EXCESSOS)('TC-SB-26 mais de três nas combinações que faltam ($caso) $descricao', async ({ posicoes, valor }) => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  for (const pos of posicoes) await preencher(user, pos, valor);
+
+  for (const pos of posicoes) {
+    expect(celula(pos)).toHaveTextContent(new RegExp(`^${valor}$`));
+    expect(celula(pos)).toHaveAttribute('data-conflito', 'true');
+  }
+  expect(posicoesEmConflito()).toEqual([...posicoes].sort());
+});
