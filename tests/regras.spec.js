@@ -50,3 +50,21 @@ test('TC-SB-24 conflito também marca células fixas', async () => {
   }
   expect(posicoesEmConflito()).toEqual(['4-1', '4-2', '4-3', '4-4']);
 });
+
+// TC-SB-25: a trinca nas combinações que os TCs 13/14 não cobrem (1 na linha, 0 na coluna) e nas bordas.
+const TRINCAS = [
+  { caso: 'a', descricao: 'três 1 na linha', posicoes: ['1-1', '1-2', '1-3'], valor: '1' },
+  { caso: 'b', descricao: 'três 0 na coluna', posicoes: ['1-1', '2-1', '3-1'], valor: '0' },
+  { caso: 'c', descricao: 'três 0 na borda direita', posicoes: ['1-4', '1-5', '1-6'], valor: '0' },
+  { caso: 'd', descricao: 'três 1 na borda inferior', posicoes: ['4-6', '5-6', '6-6'], valor: '1' },
+];
+test.each(TRINCAS)('TC-SB-25 três iguais em todas as combinações e nas bordas ($caso) $descricao', async ({ posicoes, valor }) => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  for (const pos of posicoes) await preencher(user, pos, valor);
+
+  for (const pos of posicoes) {
+    expect(celula(pos)).toHaveTextContent(new RegExp(`^${valor}$`));
+    expect(celula(pos)).toHaveAttribute('data-conflito', 'true');
+  }
+  expect(posicoesEmConflito()).toEqual(posicoes);
+});
