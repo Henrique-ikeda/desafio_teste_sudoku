@@ -1,5 +1,5 @@
 // Casos de teste de vitória e novo jogo — tarefa F5 do Felipe. Contrato: seções 1, 3 e 5 do PLANEJAMENTO.md.
-import { abrirJogo, celula, preencher, celulasEmConflito, screen, PUZZLE_PADRAO, SOLUCAO_PADRAO, VAZIAS_PADRAO, TODAS_AS_POSICOES, solucao } from './helpers.js';
+import { abrirJogo, celula, preencher, celulasEmConflito, screen, PUZZLE_PADRAO, SOLUCAO_PADRAO, VAZIAS_PADRAO, TODAS_AS_POSICOES, solucao, cliqueDireito } from './helpers.js';
 
 // Posições 'L-C' com data-conflito = "true", em ordem (conjunto EXATO).
 const posicoesEmConflito = () => celulasEmConflito().map((c) => c.getAttribute('data-testid').replace('celula-', '')).sort();
@@ -32,4 +32,25 @@ test('TC-SB-21 grade cheia com erro não vence', async () => {
   expect(celula('1-1')).toHaveAttribute('data-conflito', 'true');
   // A linha 1 fica 101011 (quatro 1) e a coluna 1 também fica 101011 (quatro 1): todas as células com 1 nas duas.
   expect(posicoesEmConflito()).toEqual(['1-1', '1-3', '1-5', '1-6', '3-1', '5-1', '6-1']);
+});
+
+test('TC-SB-22 grade bloqueada após a vitória', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_PADRAO });
+  await preencherSolucao(user); // cenário do TC-SB-20
+  expect(screen.getByTestId('mensagem')).toHaveTextContent(/^Resolvido!$/); // garante que venceu antes de testar o bloqueio
+
+  // Ações depois da vitória: a grade não pode mudar em nenhuma delas.
+  const acoes = [
+    ['clique esquerdo em 1-1', () => user.click(celula('1-1'))],
+    ['clique direito em 1-1', () => cliqueDireito(user, celula('1-1'))],
+    ['Limpar', () => user.click(screen.getByTestId('btn-limpar'))],
+    ['Desfazer', () => user.click(screen.getByTestId('btn-desfazer'))],
+  ];
+  for (const [, acao] of acoes) {
+    await acao();
+    expect(celula('1-1')).toHaveTextContent(/^0$/);
+    expect(gradeNaTela()).toBe(SOLUCAO_PADRAO); // as 36 células não mudam
+    expect(screen.getByTestId('vazias')).toHaveTextContent(/^0$/);
+    expect(screen.getByTestId('mensagem')).toHaveTextContent(/^Resolvido!$/);
+  }
 });
