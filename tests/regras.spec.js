@@ -1,5 +1,5 @@
 // Casos de teste das regras (conflitos) — tarefas F2, F3 e F4 do Felipe. Contrato: seções 1, 3 e 5 do PLANEJAMENTO.md.
-import { abrirJogo, celula, preencher, preencherLinha, celulasEmConflito, screen, PUZZLE_PADRAO, PUZZLE_VAZIO } from './helpers.js';
+import { abrirJogo, celula, preencher, preencherLinha, preencherColuna, celulasEmConflito, screen, PUZZLE_PADRAO, PUZZLE_VAZIO } from './helpers.js';
 
 // Posições 'L-C' das células com data-conflito = "true", em ordem: para conferir o conjunto EXATO
 // (pega implementação que marca demais, como a linha inteira, ou de menos).
@@ -196,4 +196,20 @@ test('TC-SB-17 duas linhas completas iguais', async () => {
     }
   }
   expect(posicoesEmConflito()).toEqual(posicoesDasLinhas(1, 2).sort());
+});
+
+const posicoesDasColunas = (...colunas) => colunas.flatMap((c) => [1, 2, 3, 4, 5, 6].map((l) => `${l}-${c}`));
+
+test('TC-SB-18 duas colunas completas iguais', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  await preencherColuna(user, 1, LINHA_REPETIDA); // de cima para baixo
+  await preencherColuna(user, 2, LINHA_REPETIDA);
+
+  for (const c of [1, 2]) {
+    for (let l = 1; l <= 6; l++) {
+      expect(celula(`${l}-${c}`)).toHaveTextContent(new RegExp(`^${LINHA_REPETIDA[l - 1]}$`));
+      expect(celula(`${l}-${c}`)).toHaveAttribute('data-conflito', 'true');
+    }
+  }
+  expect(posicoesEmConflito()).toEqual(posicoesDasColunas(1, 2).sort());
 });
