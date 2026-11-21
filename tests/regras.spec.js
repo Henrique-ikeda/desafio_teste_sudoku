@@ -213,3 +213,21 @@ test('TC-SB-18 duas colunas completas iguais', async () => {
   }
   expect(posicoesEmConflito()).toEqual(posicoesDasColunas(1, 2).sort());
 });
+
+test('TC-SB-28 conflito de linhas iguais some ao corrigir', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  await preencherLinha(user, 1, LINHA_REPETIDA);
+  await preencherLinha(user, 2, LINHA_REPETIDA);
+
+  // Antes: as 12 células das linhas 1 e 2 em conflito.
+  expect(posicoesEmConflito()).toEqual(posicoesDasLinhas(1, 2).sort());
+
+  // 2-6 vai de 1 para vazia: a linha 2 fica incompleta e deixa de contar.
+  await user.click(celula('2-6'));
+
+  // Depois: 2-6 vazia, o resto da linha 2 continua, e nada em conflito.
+  expect(celula('2-6')).toHaveTextContent(/^$/);
+  expect(celula('2-6')).toHaveAttribute('data-conflito', 'false');
+  expect(celula('2-5')).toHaveTextContent(/^1$/);
+  expect(posicoesEmConflito()).toEqual([]);
+});
