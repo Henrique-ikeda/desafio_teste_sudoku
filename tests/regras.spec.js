@@ -97,3 +97,25 @@ test('TC-SB-16 mais de três 1 na coluna', async () => {
   }
   expect(posicoesEmConflito()).toEqual(['1-1', '3-1', '5-1', '6-1']);
 });
+
+test('TC-SB-19 conflito some ao corrigir', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  await preencher(user, '1-1', '0');
+  await preencher(user, '1-2', '0');
+  await preencher(user, '1-3', '0');
+
+  // Antes: as três em conflito.
+  expect(posicoesEmConflito()).toEqual(['1-1', '1-2', '1-3']);
+
+  // Mais um clique em 1-3: 0 -> 1, a trinca deixa de existir.
+  await user.click(celula('1-3'));
+
+  // Depois: nada em conflito.
+  expect(celula('1-1')).toHaveTextContent(/^0$/);
+  expect(celula('1-2')).toHaveTextContent(/^0$/);
+  expect(celula('1-3')).toHaveTextContent(/^1$/);
+  for (const pos of ['1-1', '1-2', '1-3']) {
+    expect(celula(pos)).toHaveAttribute('data-conflito', 'false');
+  }
+  expect(posicoesEmConflito()).toEqual([]);
+});
