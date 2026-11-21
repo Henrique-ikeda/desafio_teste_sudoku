@@ -54,3 +54,29 @@ test('TC-SB-22 grade bloqueada após a vitória', async () => {
     expect(screen.getByTestId('mensagem')).toHaveTextContent(/^Resolvido!$/);
   }
 });
+
+// As 9 fixas do PUZZLE_PADRAO (seção 3), com o valor de cada uma.
+const FIXAS_PADRAO = TODAS_AS_POSICOES.map((pos, i) => [pos, PUZZLE_PADRAO[i]]).filter(([, v]) => v !== '.');
+
+test('TC-SB-23 novo jogo', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_PADRAO });
+  await preencher(user, '1-1', '0');
+
+  // Antes do botão: garante que a jogada aconteceu.
+  expect(celula('1-1')).toHaveTextContent(/^0$/);
+  expect(screen.getByTestId('btn-desfazer')).not.toBeDisabled();
+
+  await user.click(screen.getByTestId('btn-novo-jogo'));
+
+  // Depois: volta ao puzzle inicial.
+  expect(celula('1-1')).toHaveTextContent(/^$/);
+  expect(FIXAS_PADRAO).toHaveLength(9);
+  for (const [pos, valor] of FIXAS_PADRAO) {
+    expect(celula(pos)).toHaveAttribute('data-fixa', 'true');
+    expect(celula(pos)).toHaveTextContent(new RegExp(`^${valor}$`));
+  }
+  expect(screen.getByTestId('vazias')).toHaveTextContent(/^27$/);
+  expect(screen.getByTestId('btn-desfazer')).toBeDisabled();
+  expect(screen.getByTestId('mensagem')).toHaveTextContent(/^$/);
+  expect(posicoesEmConflito()).toEqual([]);
+});
