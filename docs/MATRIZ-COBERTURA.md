@@ -12,7 +12,7 @@ Cada regra da seção 1 do PLANEJAMENTO.md tem pelo menos um caso de teste que o
 | 6 | Desfazer (vários passos, inclusive o Limpar; desabilitado sem jogadas) | 08, 09, 10 |
 | 7 | Nunca três iguais seguidos (linha e coluna) | 13, 14, 19, 24, 25 |
 | 8 | Dois iguais seguidos é permitido | 11 |
-| 9 | Três 0 e três 1 por linha e coluna (mais de três já é erro) | 15, 16, 21, 26 |
+| 9 | Três 0 e três 1 por linha e coluna (mais de três já é erro) | 15, 16, 21, 26, 27 |
 | 10 | Linhas e colunas completas não podem ser iguais; incompletas não contam | 17, 18, 12 |
 | 11 | Conflito some quando a regra deixa de ser quebrada | 19 |
 | 12 | Conflito vale também para as células fixas | 24 |

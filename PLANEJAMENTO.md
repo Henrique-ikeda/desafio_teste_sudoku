@@ -230,6 +230,7 @@ Salvo quando dito outro, os passos partem de células vazias.
 | TC-SB-24 | Conflito também marca células fixas | `PUZZLE_PADRAO`. Preencher `4-2` com 0 (a linha 4 fica `0000..`) | `4-1`, `4-2`, `4-3` e `4-4` com `data-conflito` = `true`, inclusive as fixas `4-1`, `4-3` e `4-4` |
 | TC-SB-25 | Três iguais em todas as combinações e nas bordas | `PUZZLE_VAZIO`. Um caso por vez (`test.each`): (a) `1-1`, `1-2` e `1-3` com 1; (b) `1-1`, `2-1` e `3-1` com 0; (c) `1-4`, `1-5` e `1-6` com 0 (borda direita); (d) `4-6`, `5-6` e `6-6` com 1 (borda inferior) | Em cada caso, as três células mostram o valor e têm `data-conflito` = `true`; nenhuma outra célula em conflito |
 | TC-SB-26 | Mais de três nas combinações que faltam | `PUZZLE_VAZIO`. Um caso por vez (`test.each`): (a) linha 1 com 1 em `1-1`, `1-3`, `1-5` e `1-6`; (b) coluna 1 com 0 em `1-1`, `3-1`, `5-1` e `6-1` (sem três seguidos) | Em cada caso, as quatro células mostram o valor e têm `data-conflito` = `true`; nenhuma outra célula em conflito |
+| TC-SB-27 | Exatamente três iguais sem trinca não é conflito | `PUZZLE_VAZIO`. Preencher `1-1`, `1-3` e `1-5` com 0; depois preencher `1-6` com 0 | Com três 0: as três mostram "0" e nenhuma célula está em conflito. Com o quarto 0: `1-1`, `1-3`, `1-5` e `1-6` com `data-conflito` = `true` e nenhuma outra |
 
 ## 6. Fluxo de trabalho no Git
 
