@@ -21,3 +21,15 @@ test('TC-SB-20 vitória', async () => {
   expect(screen.getByTestId('vazias')).toHaveTextContent(/^0$/);
   expect(posicoesEmConflito()).toEqual([]);
 });
+
+test('TC-SB-21 grade cheia com erro não vence', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_PADRAO });
+  await preencherSolucao(user, { '1-1': '1' }); // 1-1 recebe 1 em vez de 0
+
+  expect(celula('1-1')).toHaveTextContent(/^1$/);
+  expect(screen.getByTestId('vazias')).toHaveTextContent(/^0$/);
+  expect(screen.getByTestId('mensagem')).toHaveTextContent(/^$/);
+  expect(celula('1-1')).toHaveAttribute('data-conflito', 'true');
+  // A linha 1 fica 101011 (quatro 1) e a coluna 1 também fica 101011 (quatro 1): todas as células com 1 nas duas.
+  expect(posicoesEmConflito()).toEqual(['1-1', '1-3', '1-5', '1-6', '3-1', '5-1', '6-1']);
+});
