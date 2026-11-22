@@ -5,7 +5,7 @@ Cada regra da seção 1 do PLANEJAMENTO.md tem pelo menos um caso de teste que o
 | # | Regra (seção 1) | TCs |
 |---|---|---|
 | 1 | Grade 6 × 6 = 36 células, com o puzzle (ou um do banco interno) | 01, 02 |
-| 2 | Células fixas não mudam | 03, 07, 23 |
+| 2 | Células fixas não mudam | 03, 07, 23, 39 |
 | 3 | Clique esquerdo: vazia → 0 → 1 → vazia; clique direito ao contrário | 04, 05, 32, 34 |
 | 4 | Contador de vazias | 06, 07, 10, 20, 21 |
 | 5 | Limpar apaga só o que o jogador preencheu | 07, 10, 30 |

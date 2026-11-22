@@ -243,6 +243,7 @@ Salvo quando dito outro, os passos partem de células vazias.
 | TC-SB-36 | Mais de três com cinco 0 na linha | `PUZZLE_VAZIO`. Preencher `1-1`, `1-2`, `1-4`, `1-5` e `1-6` com 0 (`1-3` fica vazia) | As cinco com `data-conflito` = `true`, `1-3` vazia com `false`; nenhuma outra célula em conflito |
 | TC-SB-37 | Linhas e colunas completas iguais, mesmo longe uma da outra | `PUZZLE_VAZIO`. Um caso por vez (`test.each`): (a) linhas 1 e 5 com `001011`; (b) colunas 1 e 5 (de cima para baixo) com `001011` | Em cada caso, as 12 células das duas linhas (ou colunas) mostram o valor e têm `data-conflito` = `true`; nenhuma outra célula em conflito |
 | TC-SB-38 | Linhas iguais marcam também as células fixas | `puzzle` = `001011` + `00101.` + 24 pontos (linha 1 fixa em `001011`; linha 2 com as cinco primeiras fixas iguais e `2-6` vazia). Preencher `2-6` com 1 | `2-6` = "1" e `vazias` = 24; as 12 células das linhas 1 e 2 com `data-conflito` = `true`, inclusive as 11 fixas (`data-fixa` = `true`); nenhuma outra |
+| TC-SB-39 | Célula fixa de valor 0 não muda | `PUZZLE_PADRAO`. Clique esquerdo e clique direito em `4-1`; o mesmo em `6-6` (as duas são fixas com valor 0) | `4-1` e `6-6` continuam "0" com `data-fixa` = `true`; `vazias` continua 27; `btn-desfazer` continua desabilitado |
 
 ## 6. Fluxo de trabalho no Git
 
