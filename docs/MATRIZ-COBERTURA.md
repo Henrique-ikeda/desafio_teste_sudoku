@@ -6,7 +6,7 @@ Cada regra da seção 1 do PLANEJAMENTO.md tem pelo menos um caso de teste que o
 |---|---|---|
 | 1 | Grade 6 × 6 = 36 células, com o puzzle (ou um do banco interno) | 01, 02 |
 | 2 | Células fixas não mudam | 03, 07, 23 |
-| 3 | Clique esquerdo: vazia → 0 → 1 → vazia; clique direito ao contrário | 04, 05, 32 |
+| 3 | Clique esquerdo: vazia → 0 → 1 → vazia; clique direito ao contrário | 04, 05, 32, 34 |
 | 4 | Contador de vazias | 06, 07, 10, 20, 21 |
 | 5 | Limpar apaga só o que o jogador preencheu | 07, 10, 30 |
 | 6 | Desfazer (vários passos, inclusive o Limpar; desabilitado sem jogadas) | 08, 09, 10, 31, 32 |
@@ -16,7 +16,7 @@ Cada regra da seção 1 do PLANEJAMENTO.md tem pelo menos um caso de teste que o
 | 10 | Linhas e colunas completas não podem ser iguais; incompletas não contam | 12, 17, 18, 28 |
 | 11 | Conflito some quando a regra deixa de ser quebrada | 19, 28, 30, 31, 32, 33 |
 | 12 | Conflito vale também para as células fixas | 24 |
-| 13 | Vitória só com a grade cheia e sem conflito; grade bloqueada depois | 20, 21, 22, 29 |
+| 13 | Vitória só com a grade cheia e sem conflito; grade bloqueada depois | 20, 21, 22, 29, 34 |
 | 14 | Novo jogo volta o puzzle ao começo | 23, 29, 33 |
 
 **Para que serve:** se alguém fosse implementar o jogo só a partir destes testes, toda regra do jogo teria um teste exigindo que ela exista.
