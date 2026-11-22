@@ -8,8 +8,8 @@ Desafio de testes: casos de teste para testar o **Sudoku binário** de tamanho *
 
 - Grade de 6 × 6 células; cada célula fica vazia, com 0 ou com 1.
 - Nunca três números iguais seguidos numa linha ou coluna.
-- Cada linha e cada coluna tem exatamente três 0 e três 1.
-- Não pode haver duas linhas iguais nem duas colunas iguais.
+- Cada linha e cada coluna tem exatamente três 0 e três 1; ter mais de três de um número já é erro, mesmo com a linha ou a coluna incompleta.
+- Não pode haver duas linhas completas iguais nem duas colunas completas iguais.
 - Células fixas do puzzle não mudam; clique esquerdo alterna vazia → 0 → 1 → vazia, clique direito alterna ao contrário.
 - Conflitos aparecem na hora; grade cheia e sem conflito = "Resolvido!". Há os botões Limpar, Desfazer e Novo jogo.
 

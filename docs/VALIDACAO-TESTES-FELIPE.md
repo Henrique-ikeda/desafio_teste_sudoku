@@ -48,3 +48,86 @@ Os testes conferem mais do que a linha da seção 5, sempre com algo que decorre
 3. **Novo jogo sem o parâmetro `puzzle`:** a seção 1 diz que ele carrega um puzzle do banco, mas não diz se é o mesmo ou outro. Nenhum teste assume nada sobre isso.
 4. **Desfazer depois do Novo jogo:** o TC-SB-23 exige `btn-desfazer` desabilitado, o que implica perder o histórico anterior. A seção 1 não diz isso com todas as letras ("nada para desfazer").
 5. **Sugestões de casos novos dos revisores, fora da área do Felipe:** "Desfazer restaura o conflito" (regras de Desfazer + conflito) e "conflito em célula fixa por linhas completas iguais".
+
+## Lacunas fechadas (F6): TC-SB-31 a TC-SB-48
+
+Depois dos TCs 13 a 30, a suíte foi atacada com mais defeitos (**37 mutantes**: os 15 da validação acima, 9 achados numa auditoria posterior e 13 vindos da leitura do código dos testes). Os que **sobreviviam** viraram casos novos, escritos no estilo dos anteriores, com o esperado derivado da seção 1 e o conjunto exato de células em conflito. Os casos ficam em `tests/lacunas-felipe.spec.js`.
+
+### Método
+
+1. A referência (fora do repositório, nunca commitada) foi estendida com os mutantes e com **variantes das decisões que a spec deixa em aberto**: render síncrono × `queueMicrotask` × `setTimeout`, Limpar vazio contando ou não como jogada, Desfazer desabilitado ou não na vitória, e banco de puzzles aleatório no Novo jogo.
+2. A suíte de antes (TCs 01 a 30) rodou contra cada mutante: **18 de 37 mortos; 19 sobreviviam**.
+3. Para cada sobrevivente, um TC novo: primeiro o `docs:` (seção 5, README e matriz), depois o `test:`. Cada TC falha pelo motivo certo sem o jogo e passa na referência.
+4. A suíte inteira (antiga + nova) rodou de novo contra todos os mutantes: **37 de 37 mortos**. O executor ignora falhas por *timeout* (não contam como morte).
+
+### Resultado: 18/37 antes, 37/37 depois
+
+Mutantes que **sobreviviam** à suíte anterior e o TC novo que os mata:
+
+| Mutante | Defeito | Antes (TCs 01–30) | Mortos por (TCs novos) |
+|---|---|---|---|
+| excesso-offbyone | excesso não marcado na última linha/coluna | **sobrevivia** | 35, 43 |
+| excesso-igual4 | excesso só com exatamente 4 iguais (5 não) | **sobrevivia** | 36 |
+| iguais-so-vizinhas | repetição só entre linhas/colunas vizinhas | **sobrevivia** | 37, 43 |
+| iguais-sem-fixas | repetição não marca as células fixas | **sobrevivia** | 38 |
+| desfazer-sem-recalc | Desfazer não recalcula os conflitos | **sobrevivia** | 31, 32 |
+| direito-sem-recalc | clique direito não recalcula os conflitos | **sobrevivia** | 32, 34 |
+| direito-sem-hist | clique direito não entra no histórico do Desfazer | **sobrevivia** | 32 |
+| novo-sem-recalc | Novo jogo não limpa os conflitos | **sobrevivia** | 33 |
+| vitoria-so-esq | vitória só dispara por clique esquerdo | **sobrevivia** | 34 |
+| fixa-zero-muda | fixa de valor 0 muda com o clique | **sobrevivia** | 39 |
+| trinca-so-bordas | trinca só detectada nas pontas da linha/coluna | **sobrevivia** | 40, 43, 46 |
+| trinca-marca-linha | trinca marca também as outras células preenchidas da linha | **sobrevivia** | 41, 42, 43 |
+| conflito-parcial-trava | some a trinca e o excesso que continua é desmarcado junto | **sobrevivia** | 42, 43 |
+| vence-sem-trinca-repeticao | vitória só olha o excesso (ignora trinca e repetição) | **sobrevivia** | 43 |
+| vitoria-so-ultimo-0 | vitória só quando a última jogada é um 0 | **sobrevivia** | 44 |
+| bloqueio-so-algumas | depois da vitória só a linha 1 fica bloqueada | **sobrevivia** | 45 |
+| fixa-coluna-sem-conflito | fixa em conflito por coluna não é marcada | **sobrevivia** | 46 |
+| conflitos-unidos | corrigir um conflito desmarca o outro independente | **sobrevivia** | 41, 42, 43, 47 |
+| repeticao-so-prefixo | linhas que só diferem na última célula tratadas como iguais | **sobrevivia** | 48 |
+
+Mutantes que a suíte anterior **já matava** (nenhum TC novo foi escrito só para eles):
+
+| Mutante | Defeito | Antes (TCs 01–30) | Também mortos por (TCs novos) |
+|---|---|---|---|
+| trinca-so-linhas | trinca só verificada nas linhas | morto (14, 25) | 40, 46, 47 |
+| trinca-so-zero | trinca só para 0 | morto (14, 25) | 32, 40, 43, 47 |
+| trinca-ignora-borda | trinca ignora a borda (posições 5 e 6) | morto (25) | 40, 47 |
+| excesso-so-completa | excesso só com a linha completa | morto (15, 16, 26, 27) | 35, 36 |
+| excesso-so-quarta | excesso marca só a quarta célula | morto (15, 16, 26, 27, 21) | 35, 36, 42, 48 |
+| excesso-maior-igual-3 | excesso com "≥ 3" | morto (27, 28, 20, 21, 22, 23, 29, 12, 01, 02) | 34, 43, 44, 45, 46, 48 |
+| colunas-iguais-nao | colunas iguais não verificadas | morto (18) | 37, 43 |
+| conflito-grudado | conflito não some depois de corrigir | morto (19, 30, 28, 20, 21, 22, 29, 12) | 31, 32, 34, 41, 42, 43, 44, 45, 47, 48 |
+| limpar-nao-recalcula | Limpar não recalcula os conflitos | morto (30) | — |
+| fixas-nunca-conflito | fixas nunca marcadas em conflito | morto (24, 21) | 38, 46 |
+| vitoria-ignora-conflito | vitória só exige a grade cheia | morto (21) | 34, 43, 44 |
+| vitoria-nao-bloqueia-direito-desfazer | vitória não bloqueia clique direito nem Desfazer | morto (22) | 45 |
+| novo-jogo-nao-limpa-mensagem | Novo jogo não limpa a mensagem | morto (29) | — |
+| novo-jogo-nao-desbloqueia | Novo jogo não desbloqueia a grade | morto (29) | — |
+| novo-jogo-nao-zera-historico | Novo jogo não zera o histórico do Desfazer | morto (23) | — |
+| excesso-ignora-outro-valor | excesso ignorado se houver o outro valor na linha | morto (21) | 34, 42, 43, 48 |
+| excesso-nao-some | conflito de excesso não some ao corrigir | morto (20, 21, 22, 29, 28, 12) | 34, 41, 42, 43, 44, 45, 48 |
+| desfazer-sempre-ultima | Desfazer perde o histórico ao trocar de célula | morto (10) | — |
+
+### Referência e variantes
+
+- A suíte inteira (58 testes) passou na referência em 3 rodadas seguidas (58/58, 58/58, 58/58). O teste mais lento leva cerca de 2580 ms (TC-SB-43 grade cheia com trinca ou com l); por isso o arquivo novo usa `jest.setTimeout(30000)`.
+- **Todas as variantes** passam 58/58, **exceto** `async-timeout` (render adiado com `setTimeout`), que derruba **três testes do Henrique** (TC-SB-01, 02 e 09), porque leem a tela logo depois de `abrirJogo`, sem nenhuma interação para esperar. Os testes novos não dependem disso. Isso é só um achado: a spec não diz que o render precisa ser síncrono.
+
+### Achado durante a validação
+
+- **TC-SB-45** nasceu cego: clicava esquerdo e depois direito na mesma célula e só conferia a grade no fim, e os dois cliques se cancelam (`1` → vazia → `1`). O mutante `bloqueio-so-algumas` sobreviveu justamente a ele. Agora a grade é conferida depois de **cada** clique, e o mutante morre.
+- O revisor independente (Haiku 5.5) apontou que TC-SB-37, 42 e 48 prometiam "mostram o valor" na seção 5 sem conferir os valores. Corrigido, com um commit por TC.
+
+### Casos que não foram escritos
+
+Três candidatos já eram mortos pela suíte anterior e não ganharam TC: excesso ignorado quando há o outro valor na linha (morto pelo TC-SB-21), conflito de excesso que não some (morto por vários) e Desfazer entre células diferentes (morto pelo TC-SB-10).
+
+### Sugestões (não alteradas)
+
+- **TC-SB-07:** a conferência "Desfazer habilitado" depois do Limpar passa mesmo se o Limpar não contar como jogada (as duas jogadas anteriores já habilitam o botão; `tests/acoes.spec.js:33-34` e `:63`). Quem pega isso é o TC-SB-10.
+- **TC-SB-27:** o estado final (quatro 0 em `1-1`, `1-3`, `1-5` e `1-6`) repete o do TC-SB-15; o que o TC-27 acrescenta é a fronteira de três.
+- **TC-SB-02:** repete 5 vezes um banco que pode ter um puzzle só (`tests/grade.spec.js:80-82`).
+- **TC-SB-24:** mistura trinca e excesso (a linha 4 fica `0000..`); se falhar, não diz qual das duas regras quebrou.
+- **`SOLUCAO_PADRAO` é simétrica** (a linha *i* é igual à coluna *i*, conferido por script), então o TC-SB-20 não distingue linhas de colunas trocadas.
+- **Ambiguidades da spec em aberto:** Novo jogo sem `puzzle` (o mesmo ou outro do banco?); Desfazer depois do Novo jogo; Limpar sem nada preenchido conta como jogada?; clique em fixa conta como jogada?; botões desabilitados ou só inertes na vitória?; trinca e excesso ao mesmo tempo (união?); excesso ou trinca com mais de quatro iguais marca todas?
