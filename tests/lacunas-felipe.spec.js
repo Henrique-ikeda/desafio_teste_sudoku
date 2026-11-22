@@ -232,3 +232,13 @@ test('TC-SB-47 dois conflitos independentes', async () => {
   expect(celula('6-4')).toHaveTextContent(/^$/);
   esperarConflitos([]);
 });
+
+test('TC-SB-48 linhas que diferem só na última célula não são repetidas', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  await preencherLinha(user, 1, '001011');
+  await preencherLinha(user, 2, '001010');
+
+  expect(btn('vazias')).toHaveTextContent(/^24$/);
+  for (const pos of [...posicoesDasLinhas(1), '2-3', '2-5']) expect(celula(pos)).toHaveAttribute('data-conflito', 'false');
+  esperarConflitos(['2-1', '2-2', '2-4', '2-6']);
+});
