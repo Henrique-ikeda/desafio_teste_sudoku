@@ -117,3 +117,15 @@ test('TC-SB-38 linhas iguais marcam também as células fixas', async () => {
   for (const pos of fixas) expect(celula(pos)).toHaveAttribute('data-fixa', 'true');
   esperarConflitos(posicoesDasLinhas(1, 2));
 });
+
+test('TC-SB-39 célula fixa de valor 0 não muda', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_PADRAO });
+  for (const pos of ['4-1', '6-6']) {
+    await user.click(celula(pos));
+    await cliqueDireito(user, celula(pos));
+    expect(celula(pos)).toHaveTextContent(/^0$/);
+    expect(celula(pos)).toHaveAttribute('data-fixa', 'true');
+  }
+  expect(btn('vazias')).toHaveTextContent(/^27$/);
+  expect(btn('btn-desfazer')).toBeDisabled();
+});
