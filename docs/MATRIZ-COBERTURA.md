@@ -13,7 +13,7 @@ Cada regra da seção 1 do PLANEJAMENTO.md tem pelo menos um caso de teste que o
 | 7 | Nunca três iguais seguidos (linha e coluna) | 13, 14, 19, 24, 25 |
 | 8 | Dois iguais seguidos é permitido | 11 |
 | 9 | Três 0 e três 1 por linha e coluna (mais de três já é erro) | 15, 16, 21, 26, 27, 35, 36 |
-| 10 | Linhas e colunas completas não podem ser iguais; incompletas não contam | 12, 17, 18, 28 |
+| 10 | Linhas e colunas completas não podem ser iguais; incompletas não contam | 12, 17, 18, 28, 37 |
 | 11 | Conflito some quando a regra deixa de ser quebrada | 19, 28, 30, 31, 32, 33 |
 | 12 | Conflito vale também para as células fixas | 24 |
 | 13 | Vitória só com a grade cheia e sem conflito; grade bloqueada depois | 20, 21, 22, 29, 34 |
