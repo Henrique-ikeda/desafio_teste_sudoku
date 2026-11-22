@@ -207,3 +207,13 @@ test('TC-SB-45 depois da vitória, nenhuma célula muda', async () => {
   expect(btn('vazias')).toHaveTextContent(/^0$/);
   expect(btn('mensagem')).toHaveTextContent(/^Resolvido!$/);
 });
+
+test('TC-SB-46 trinca na coluna marca também a célula fixa', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_PADRAO });
+  await preencher(user, '2-1', '0');
+  await preencher(user, '3-1', '0');
+
+  expect(celula('4-1')).toHaveAttribute('data-fixa', 'true');
+  expect(celula('4-1')).toHaveTextContent(/^0$/);
+  esperarConflitos(['2-1', '3-1', '4-1']);
+});
