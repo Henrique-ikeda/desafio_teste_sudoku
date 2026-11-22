@@ -44,3 +44,17 @@ test('TC-SB-32 clique direito gera e desfaz conflito, e o Desfazer volta o cliqu
   expect(celula('1-3')).toHaveTextContent(/^1$/);
   esperarConflitos(['1-1', '1-2', '1-3']);
 });
+
+test('TC-SB-33 novo jogo limpa os conflitos', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  await preencherLinha(user, 1, '000');
+  esperarConflitos(['1-1', '1-2', '1-3']);
+
+  await user.click(btn('btn-novo-jogo'));
+  for (const pos of ['1-1', '1-2', '1-3']) {
+    expect(celula(pos)).toHaveTextContent(/^$/);
+    expect(celula(pos)).toHaveAttribute('data-conflito', 'false');
+  }
+  expect(btn('vazias')).toHaveTextContent(/^36$/);
+  esperarConflitos([]);
+});
