@@ -1,4 +1,4 @@
-import { abrirJogo, celula, within, screen, PUZZLE_PADRAO, TODAS_AS_POSICOES } from './helpers.js';
+import { abrirJogo, celula, within, cliqueDireito, screen, PUZZLE_PADRAO, TODAS_AS_POSICOES } from './helpers.js';
 
 // Fixas do PUZZLE_PADRAO, conforme a seção 3 do PLANEJAMENTO.md (posição -> valor).
 const FIXAS_ESPERADAS = {
@@ -115,4 +115,31 @@ test('TC-SB-02 puzzle sem parâmetro', async () => {
     expect(screen.getByTestId('vazias')).toHaveTextContent(new RegExp(`^${36 - fixas.length}$`));
     expect(screen.getByTestId('mensagem').textContent.trim()).toBe('');
   }
+});
+
+test('TC-SB-03 célula fixa não muda', async () => {
+  // PUZZLE_PADRAO: 9 fixas (seção 3), 27 vazias. A célula 1-5 é fixa com valor 1.
+  const user = await abrirJogo({ puzzle: PUZZLE_PADRAO });
+
+  // Confere que 1-5 continua fixa com 1, que o contador segue em 27,
+  // que o desfazer segue desabilitado e que as outras 8 fixas não mudaram.
+  const conferir = () => {
+    expect(celula('1-5')).toHaveTextContent(/^1$/);
+    expect(celula('1-5')).toHaveAttribute('data-fixa', 'true');
+    expect(screen.getByTestId('vazias')).toHaveTextContent(/^27$/);
+    expect(screen.getByTestId('btn-desfazer')).toBeDisabled();
+
+    const g = varrerGrade();
+    for (const [pos, valor] of Object.entries(FIXAS_PADRAO)) {
+      if (pos === '1-5') continue;
+      expect(g[pos].texto).toBe(valor);
+      expect(g[pos].fixa).toBe('true');
+    }
+  };
+
+  await user.click(celula('1-5'));
+  conferir();
+
+  await cliqueDireito(user, celula('1-5'));
+  conferir();
 });
