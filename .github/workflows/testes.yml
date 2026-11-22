@@ -1,17 +1,97 @@
+# CI dos casos de teste (tarefa F1). Modo somente testes: o `npm test` falha de propósito
+# (o jogo não é implementado). Quem valida a entrega é o `npm run verificar`, que sai com
+# código 0 quando todo teste falha pelo motivo certo e tem um ID da seção 5 do PLANEJAMENTO.md.
 name: Testes
 
 on:
   push:
   pull_request:
+    types: [opened, synchronize, reopened, labeled]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Uma execução por branch e por evento: um push novo cancela a execução antiga da mesma branch.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
 
 jobs:
   verificar:
+    name: verificar (Node ${{ matrix.node }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [18, 20, 22]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      # --ignore-scripts: nenhum pacote do projeto precisa de script de instalação, e não rodar
+      # scripts de terceiros na CI fecha um vetor de ataque de cadeia de suprimentos (Sonar S6505).
+      - run: npm ci --ignore-scripts
+
+      - name: npm run verificar
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p reports
+          npm run verificar 2>&1 | tee reports/verificar.txt
+
+      - name: Relatório JSON do Jest
+        if: always()
+        shell: bash
+        # O Jest sai com código 1 porque os testes falham de propósito; o que importa é o relatório.
+        run: |
+          mkdir -p reports
+          npx jest --json --outputFile=reports/jest.json > /dev/null 2>&1 || true
+
+      - name: Publicar relatórios
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorios-node${{ matrix.node }}-${{ matrix.os }}
+          path: reports/
+          if-no-files-found: warn
+          retention-days: 14
+
+  # Confere também que todo TC do PLANEJAMENTO.md já tem teste. Só roda sob demanda ou em PR com o
+  # rótulo `entrega`, porque falha até a dupla terminar todos os TCs e não pode travar os PRs do dia a dia.
+  verificar-completo:
+    name: verificar:completo (entrega)
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'entrega'))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
-      - run: npm ci
-      - run: npm run verificar
+
+      # --ignore-scripts: nenhum pacote do projeto precisa de script de instalação, e não rodar
+      # scripts de terceiros na CI fecha um vetor de ataque de cadeia de suprimentos (Sonar S6505).
+      - run: npm ci --ignore-scripts
+
+      - name: npm run verificar:completo
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p reports
+          npm run verificar:completo 2>&1 | tee reports/verificar-completo.txt
+
+      - name: Publicar relatório
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-verificar-completo
+          path: reports/
+          if-no-files-found: warn
+          retention-days: 14

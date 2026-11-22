@@ -4,8 +4,8 @@ Sudoku binário (Takuzu) em grade **6 × 6**: **Casos de teste de interface em J
 
 | Integrante | GitHub | Papel neste repositório |
 |---|---|---|
-| Henrique (RA_HENRIQUE) | Henrique-ikeda | Setup do projeto e testes de: grade, preenchimento, vazias, limpar e desfazer (tarefas A1–A5) |
-| Felipe (RA_FELIPE) | GITHUB_FELIPE | CI, README e testes de: regras (conflitos), vitória e novo jogo (tarefas F1–F5) |
+| Henrique Kendi Ikeda (RA 24039456-2) | Henrique-ikeda | Setup do projeto e testes de: grade, preenchimento, vazias, limpar e desfazer (tarefas A1–A5) |
+| Felipe Galeti Gôngora (RA 24036480-2) | FGaleti | CI, README e testes de: regras (conflitos), vitória e novo jogo (tarefas F1–F5) |
 
 ---
 
@@ -189,6 +189,8 @@ Cada integrante é **dono de arquivos de teste diferentes** (coluna "Arquivos").
 | **F4** Linhas e colunas iguais | `felipe/f4-iguais` | tests/regras.spec.js | 17, 18 |
 | **F5** Vitória e novo jogo | `felipe/f5-vitoria` | tests/fim-de-jogo.spec.js | 20, 21, 22, 23 |
 
+**IDs reservados:** `TC-SB-25` a `TC-SB-30` ficam com o Felipe, para casos adicionais que fecham lacunas da matriz de cobertura (trinca em todas as combinações e nas bordas, excesso nas combinações que faltam, fronteira 3 × 4, conflito que some depois de corrigir ou de Limpar, novo jogo depois da vitória). Cada um entra na seção 5 no PR da tarefa que o usa (F2–F5). Casos novos do Henrique começam no `TC-SB-31`.
+
 ## 5. Casos de teste (interface)
 
 Salvo quando dito outro, os passos partem de células vazias.
@@ -231,7 +233,7 @@ Salvo quando dito outro, os passos partem de células vazias.
 
 Para o professor enxergar a contribuição dos dois, **cada um commita da própria conta**:
 
-1. **Henrique** cria o repositório e adiciona `GITHUB_FELIPE` como colaborador (Settings → Collaborators). **Felipe** aceita o convite.
+1. **Henrique** cria o repositório e adiciona `FGaleti` como colaborador (Settings → Collaborators). **Felipe** aceita o convite.
 2. Cada um configura o Git com o e-mail **cadastrado na própria conta do GitHub** (senão o commit não conta como contribuição):
    ```bash
    git config user.name "Seu Nome"

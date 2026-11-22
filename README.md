@@ -1,5 +1,7 @@
 # desafio_teste_sudoku
 
+[![Testes](https://github.com/Henrique-ikeda/desafio_teste_sudoku/actions/workflows/testes.yml/badge.svg)](https://github.com/Henrique-ikeda/desafio_teste_sudoku/actions/workflows/testes.yml)
+
 Desafio de testes: casos de teste para testar o **Sudoku binário** de tamanho **6 × 6**, com **casos de teste em JavaScript para testar JavaScript** (Jest + Testing Library).
 
 ## Especificação do desafio
@@ -17,8 +19,8 @@ Regras completas, contrato da tela e divisão das tarefas: [PLANEJAMENTO.md](PLA
 
 | Nome | RA | GitHub | Parte no trabalho |
 |---|---|---|---|
-| Henrique | RA_HENRIQUE | [Henrique-ikeda](https://github.com/Henrique-ikeda) | Tarefas A1–A5: estrutura do projeto e 12 casos de teste (grade, preenchimento, vazias, limpar e desfazer) |
-| Felipe | RA_FELIPE | [GITHUB_FELIPE](https://github.com/GITHUB_FELIPE) | Tarefas F1–F5: CI, README e 12 casos de teste (regras (conflitos), vitória e novo jogo) |
+| Henrique Kendi Ikeda | 24039456-2 | [Henrique-ikeda](https://github.com/Henrique-ikeda) | Tarefas A1–A5: estrutura do projeto e 12 casos de teste (grade, preenchimento, vazias, limpar e desfazer) |
+| Felipe Galeti Gôngora | 24036480-2 | [FGaleti](https://github.com/FGaleti) | Tarefas F1–F5: CI, README e 12 casos de teste (regras (conflitos), vitória e novo jogo) |
 
 As contribuições de cada um aparecem em **Insights → Contributors** e nos commits.
 
@@ -27,14 +29,16 @@ As contribuições de cada um aparecem em **Insights → Contributors** e nos co
 Requisitos: Node.js 18 ou superior.
 
 ```bash
-npm install
-npm test                    # roda todos os casos de teste (Jest)
+npm ci                      # instala as dependências travadas no package-lock.json
+npm test                    # roda todos os casos de teste (Jest); falham de propósito
 npm run verificar           # confere o motivo de cada falha e o ID de cada teste
 npm run verificar:completo  # idem + confere que todo caso do plano tem teste
 npx jest tests/<arquivo>.spec.js -t "TC-SB-NN"   # um caso só
 ```
 
 ## Funcionamento dos casos de teste
+
+> **Aviso para o corretor:** `npm test` termina com falhas **de propósito** (o jogo não é implementado; a entrega são os casos de teste). O comando que valida a entrega é `npm run verificar`, que sai com código 0 quando todos os testes falham pelo motivo certo.
 
 **Situação:** somente os casos de teste. O jogo não está implementado, então **todos os testes falham de propósito**, pelo motivo certo (o comportamento ainda não existe). O `npm run verificar` confere isso.
 
@@ -44,7 +48,7 @@ npx jest tests/<arquivo>.spec.js -t "TC-SB-NN"   # um caso só
 - **Sem depender de sorte:** o puzzle é passado pelo parâmetro de URL `puzzle` (36 caracteres: `0`, `1` ou `.`). `PUZZLE_PADRAO` tem 9 células fixas e solução única (`SOLUCAO_PADRAO`, conferida por script); `PUZZLE_VAZIO` deixa a grade toda livre para montar cada situação de regra em poucos cliques.
 - **Rastreabilidade:** cada teste tem no título o ID do caso (`TC-SB-NN`), o mesmo da tabela abaixo e da seção 5 do PLANEJAMENTO.md. A [matriz de cobertura](docs/MATRIZ-COBERTURA.md) liga cada regra do jogo aos seus casos.
 - **Metodologia:** TDD, um caso de teste por vez: escrever, rodar, ver falhar pelo motivo certo e fazer o commit `test:`. Uso de IA documentado em [docs/TDD-COM-IA.md](docs/TDD-COM-IA.md).
-- **Integração contínua:** o GitHub Actions roda `npm ci` e `npm run verificar` em todo push e Pull Request.
+- **Integração contínua:** o GitHub Actions ([`.github/workflows/testes.yml`](.github/workflows/testes.yml)) roda `npm ci` e `npm run verificar` em todo push e Pull Request, com Node 18, 20 e 22 no Ubuntu e no Windows. O relatório JSON do Jest e a saída do verificador ficam como artefatos de cada execução. O job `verificar:completo`, que também exige um teste para cada TC do plano, roda sob demanda (*Run workflow*) ou em PR com o rótulo `entrega`.
 
 ## Casos de teste (24)
 
