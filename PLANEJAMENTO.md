@@ -250,6 +250,7 @@ Salvo quando dito outro, os passos partem de células vazias.
 | TC-SB-43 | Grade cheia com trinca ou com linhas ou colunas repetidas não vence | `PUZZLE_VAZIO`. Um caso por vez (`test.each`), preenchendo as 36 células com uma grade que tem três 0 e três 1 em toda linha e coluna: (a) só uma trinca (`011100` na linha 6); (b) só as linhas 3 e 6 iguais (`010101`); (c) só as colunas 1 e 3 iguais | Em cada caso, `vazias` = 0 e `mensagem` vazia; só as células da regra quebrada em conflito: (a) `6-2`, `6-3` e `6-4`; (b) as 12 das linhas 3 e 6; (c) as 12 das colunas 1 e 3 |
 | TC-SB-44 | Vitória quando a última jogada é um 1 | `PUZZLE_PADRAO`. Preencher as 27 vazias com a `SOLUCAO_PADRAO`, deixando `1-3` (que vale 1) por último | Com 26 preenchidas: `vazias` = 1 e `mensagem` vazia. Depois de `1-3` = "1": `mensagem` = "Resolvido!", `vazias` = 0, as 36 células iguais à `SOLUCAO_PADRAO` e nenhuma em conflito |
 | TC-SB-45 | Depois da vitória, nenhuma célula muda | Depois do TC-SB-20 (vitória): clique esquerdo e clique direito em `3-1`, `5-5` e `6-5` (vazias na origem) e na fixa `4-1` | As 36 células continuam iguais à `SOLUCAO_PADRAO`; `vazias` = 0; `mensagem` continua "Resolvido!" |
+| TC-SB-46 | Trinca na coluna marca também a célula fixa | `PUZZLE_PADRAO`. Preencher `2-1` e `3-1` com 0 (a coluna 1 fica `.000..`, com a fixa `4-1` = 0) | `2-1`, `3-1` e a fixa `4-1` (`data-fixa` = `true`) com `data-conflito` = `true`; nenhuma outra célula em conflito |
 
 ## 6. Fluxo de trabalho no Git
 
