@@ -164,3 +164,18 @@ test('TC-SB-42 some a trinca mas o excesso continua', async () => {
   expect(celula('1-6')).toHaveAttribute('data-conflito', 'false');
   esperarConflitos(['1-1', '1-2', '1-4', '1-5']);
 });
+
+const GRADES_CHEIAS_COM_ERRO = [
+  { caso: 'a', descricao: 'só uma trinca', linhas: ['101001', '110010', '010101', '001011', '100110', '011100'], conflitos: ['6-2', '6-3', '6-4'] },
+  { caso: 'b', descricao: 'só linhas repetidas', linhas: ['110010', '101100', '010101', '101010', '001011', '010101'], conflitos: posicoesDasLinhas(3, 6) },
+  { caso: 'c', descricao: 'só colunas repetidas', linhas: ['010110', '101001', '010011', '101100', '101010', '010101'], conflitos: posicoesDasColunas(1, 3) },
+];
+test.each(GRADES_CHEIAS_COM_ERRO)('TC-SB-43 grade cheia com trinca ou com linhas ou colunas repetidas não vence ($caso) $descricao', async ({ linhas, conflitos }) => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  for (let l = 1; l <= 6; l++) await preencherLinha(user, l, linhas[l - 1]);
+
+  expect(gradeNaTela()).toBe(linhas.join(''));
+  expect(btn('vazias')).toHaveTextContent(/^0$/);
+  expect(btn('mensagem')).toHaveTextContent(/^$/);
+  esperarConflitos(conflitos);
+});
