@@ -151,3 +151,16 @@ test('TC-SB-41 a trinca marca só as três iguais, não o vizinho diferente', as
   expect(celula('1-4')).toHaveAttribute('data-conflito', 'false');
   esperarConflitos(['1-1', '1-2', '1-3']);
 });
+
+test('TC-SB-42 some a trinca mas o excesso continua', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  await preencherLinha(user, 1, '000001');
+  esperarConflitos(['1-1', '1-2', '1-3', '1-4', '1-5']);
+
+  await user.click(celula('1-3')); // 0 -> 1: a trinca some, o excesso de 0 fica
+  expect(celula('1-3')).toHaveTextContent(/^1$/);
+  expect(celula('1-3')).toHaveAttribute('data-conflito', 'false');
+  expect(celula('1-6')).toHaveTextContent(/^1$/);
+  expect(celula('1-6')).toHaveAttribute('data-conflito', 'false');
+  esperarConflitos(['1-1', '1-2', '1-4', '1-5']);
+});
