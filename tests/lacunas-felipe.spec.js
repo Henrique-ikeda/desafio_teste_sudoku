@@ -202,11 +202,14 @@ test('TC-SB-45 depois da vitória, nenhuma célula muda', async () => {
   for (const pos of VAZIAS_PADRAO) await preencher(user, pos, solucao(pos));
   expect(btn('mensagem')).toHaveTextContent(/^Resolvido!$/);
 
+  // Confere depois de CADA clique: um clique esquerdo seguido de um direito se cancelam (1 -> vazia -> 1),
+  // e um jogo que deixasse a célula mudar passaria despercebido se a grade só fosse conferida no fim.
   for (const pos of ['3-1', '5-5', '6-5', '4-1']) {
     await user.click(celula(pos));
+    expect(gradeNaTela()).toBe(SOLUCAO_PADRAO);
     await cliqueDireito(user, celula(pos));
+    expect(gradeNaTela()).toBe(SOLUCAO_PADRAO);
   }
-  expect(gradeNaTela()).toBe(SOLUCAO_PADRAO);
   expect(btn('vazias')).toHaveTextContent(/^0$/);
   expect(btn('mensagem')).toHaveTextContent(/^Resolvido!$/);
 });
