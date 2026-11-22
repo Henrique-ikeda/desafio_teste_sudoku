@@ -188,8 +188,9 @@ Cada integrante é **dono de arquivos de teste diferentes** (coluna "Arquivos").
 | **F3** Quantidade de 0 e 1 | `felipe/f3-quantidade` | tests/regras.spec.js | 15, 16, 19 |
 | **F4** Linhas e colunas iguais | `felipe/f4-iguais` | tests/regras.spec.js | 17, 18 |
 | **F5** Vitória e novo jogo | `felipe/f5-vitoria` | tests/fim-de-jogo.spec.js | 20, 21, 22, 23 |
+| **F6** Lacunas de cobertura (casos adicionais) | `felipe/f6-lacunas` | tests/lacunas-felipe.spec.js | 31 a 55 (os que forem escritos) |
 
-**IDs reservados:** `TC-SB-25` a `TC-SB-30` ficam com o Felipe, para casos adicionais que fecham lacunas da matriz de cobertura (trinca em todas as combinações e nas bordas, excesso nas combinações que faltam, fronteira 3 × 4, conflito que some depois de corrigir ou de Limpar, novo jogo depois da vitória). Cada um entra na seção 5 no PR da tarefa que o usa (F2–F5). Casos novos do Henrique começam no `TC-SB-31`.
+**IDs reservados:** `TC-SB-25` a `TC-SB-30` ficam com o Felipe, para casos adicionais que fecham lacunas da matriz de cobertura (trinca em todas as combinações e nas bordas, excesso nas combinações que faltam, fronteira 3 × 4, conflito que some depois de corrigir ou de Limpar, novo jogo depois da vitória). Cada um entrou na seção 5 no PR da tarefa que o usa (F2–F5). **`TC-SB-31` a `TC-SB-55` também ficam com o Felipe** (tarefa F6: casos adicionais que matam defeitos que a suíte anterior deixava passar, conferidos por mutação), e casos novos do Henrique passam a usar `TC-SB-56` em diante.
 
 ## 5. Casos de teste (interface)
 
