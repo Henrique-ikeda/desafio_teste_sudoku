@@ -241,6 +241,7 @@ test('TC-SB-48 linhas que diferem só na última célula não são repetidas', a
   await preencherLinha(user, 1, '001011');
   await preencherLinha(user, 2, '001010');
 
+  expect(gradeNaTela().slice(0, 12)).toBe('001011001010');
   expect(btn('vazias')).toHaveTextContent(/^24$/);
   for (const pos of [...posicoesDasLinhas(1), '2-3', '2-5']) expect(celula(pos)).toHaveAttribute('data-conflito', 'false');
   esperarConflitos(['2-1', '2-2', '2-4', '2-6']);
