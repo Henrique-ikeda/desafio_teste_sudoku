@@ -74,3 +74,45 @@ test('TC-SB-01 grade 6 × 6 com o puzzle', async () => {
   expect(screen.queryByTestId('celula-1-7')).toBeNull();
   expect(screen.queryByTestId('celula-0-1')).toBeNull();
 });
+
+test('TC-SB-02 puzzle sem parâmetro', async () => {
+  // Sem o parâmetro `puzzle`, o jogo carrega um puzzle do banco interno.
+  // Repete 5 vezes (um abrirJogo por volta), porque o banco pode ter vários puzzles.
+  for (let volta = 1; volta <= 5; volta++) {
+    await abrirJogo();
+
+    // 36 células dentro da grade.
+    const grade = screen.getByTestId('grade');
+    const celulas = within(grade).getAllByTestId(/^celula-\d+-\d+$/);
+    expect(celulas).toHaveLength(36);
+
+    const g = varrerGrade();
+    const posicoes = Object.keys(g);
+
+    // Pelo menos 1 célula fixa.
+    const fixas = posicoes.filter((pos) => g[pos].fixa === 'true');
+    expect(fixas.length).toBeGreaterThanOrEqual(1);
+
+    // Todas as células têm data-fixa exatamente 'true' ou 'false'.
+    for (const pos of posicoes) {
+      expect(['true', 'false']).toContain(g[pos].fixa);
+    }
+
+    // Fixas mostram 0 ou 1; não fixas estão vazias.
+    for (const pos of fixas) {
+      expect(g[pos].texto).toMatch(/^[01]$/);
+    }
+    for (const pos of posicoes.filter((pos) => g[pos].fixa === 'false')) {
+      expect(g[pos].texto).toBe('');
+    }
+
+    // Nenhuma célula em conflito (atributo exato "false").
+    for (const pos of posicoes) {
+      expect(g[pos].conflito).toBe('false');
+    }
+
+    // Contador de vazias = 36 − fixas; mensagem vazia.
+    expect(screen.getByTestId('vazias')).toHaveTextContent(new RegExp(`^${36 - fixas.length}$`));
+    expect(screen.getByTestId('mensagem').textContent.trim()).toBe('');
+  }
+});
