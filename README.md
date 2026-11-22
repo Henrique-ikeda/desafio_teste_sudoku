@@ -20,7 +20,7 @@ Regras completas, contrato da tela e divisão das tarefas: [PLANEJAMENTO.md](PLA
 | Nome | RA | GitHub | Parte no trabalho |
 |---|---|---|---|
 | Henrique Kendi Ikeda | 24039456-2 | [Henrique-ikeda](https://github.com/Henrique-ikeda) | Tarefas A1–A5: estrutura do projeto e 12 casos de teste (grade, preenchimento, vazias, limpar e desfazer) |
-| Felipe Galeti Gôngora | 24036480-2 | [FGaleti](https://github.com/FGaleti) | Tarefas F1–F5: CI, README e 23 casos de teste (regras (conflitos), vitória e novo jogo) |
+| Felipe Galeti Gôngora | 24036480-2 | [FGaleti](https://github.com/FGaleti) | Tarefas F1–F5: CI, README e 24 casos de teste (regras (conflitos), vitória e novo jogo) |
 
 As contribuições de cada um aparecem em **Insights → Contributors** e nos commits.
 
@@ -50,7 +50,7 @@ npx jest tests/<arquivo>.spec.js -t "TC-SB-NN"   # um caso só
 - **Metodologia:** TDD, um caso de teste por vez: escrever, rodar, ver falhar pelo motivo certo e fazer o commit `test:`. Uso de IA documentado em [docs/TDD-COM-IA.md](docs/TDD-COM-IA.md).
 - **Integração contínua:** o GitHub Actions ([`.github/workflows/testes.yml`](.github/workflows/testes.yml)) roda `npm ci` e `npm run verificar` em todo push e Pull Request, com Node 18, 20 e 22 no Ubuntu e no Windows. O relatório JSON do Jest e a saída do verificador ficam como artefatos de cada execução. O job `verificar:completo`, que também exige um teste para cada TC do plano, roda sob demanda (*Run workflow*) ou em PR com o rótulo `entrega`.
 
-## Casos de teste (35)
+## Casos de teste (36)
 
 | ID | Cenário | Arquivo | Resultado esperado | Autor |
 |---|---|---|---|---|
@@ -89,6 +89,7 @@ npx jest tests/<arquivo>.spec.js -t "TC-SB-NN"   # um caso só
 | TC-SB-33 | Novo jogo limpa os conflitos | `tests/lacunas-felipe.spec.js` | Antes: as três em conflito. Depois: as três vazias com `data-conflito` = `false`, `vazias` = 36 e nenhuma célula em conflito | Felipe |
 | TC-SB-34 | Vitória preenchendo só com o clique direito | `tests/lacunas-felipe.spec.js` | As 36 células iguais à `SOLUCAO_PADRAO`; `mensagem` = "Resolvido!"; `vazias` = 0; nenhuma célula em conflito | Felipe |
 | TC-SB-35 | Mais de três 0 na última linha e na última coluna | `tests/lacunas-felipe.spec.js` | Em cada caso, as quatro células mostram "0" e têm `data-conflito` = `true`; nenhuma outra célula em conflito | Felipe |
+| TC-SB-36 | Mais de três com cinco 0 na linha | `tests/lacunas-felipe.spec.js` | As cinco com `data-conflito` = `true`, `1-3` vazia com `false`; nenhuma outra célula em conflito | Felipe |
 
 ## Estrutura
 
