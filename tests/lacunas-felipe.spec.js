@@ -93,14 +93,15 @@ test('TC-SB-36 mais de três com cinco 0 na linha', async () => {
 });
 
 const IGUAIS_NAO_VIZINHAS = [
-  { caso: 'a', descricao: 'linhas 1 e 5', montar: async (user) => { await preencherLinha(user, 1, '001011'); await preencherLinha(user, 5, '001011'); }, posicoes: posicoesDasLinhas(1, 5) },
-  { caso: 'b', descricao: 'colunas 1 e 5', montar: async (user) => { await preencherColuna(user, 1, '001011'); await preencherColuna(user, 5, '001011'); }, posicoes: posicoesDasColunas(1, 5) },
+  { caso: 'a', descricao: 'linhas 1 e 5', montar: async (user) => { await preencherLinha(user, 1, '001011'); await preencherLinha(user, 5, '001011'); }, posicoes: posicoesDasLinhas(1, 5), valorEm: (pos) => '001011'[Number(pos[2]) - 1] },
+  { caso: 'b', descricao: 'colunas 1 e 5', montar: async (user) => { await preencherColuna(user, 1, '001011'); await preencherColuna(user, 5, '001011'); }, posicoes: posicoesDasColunas(1, 5), valorEm: (pos) => '001011'[Number(pos[0]) - 1] },
 ];
-test.each(IGUAIS_NAO_VIZINHAS)('TC-SB-37 linhas e colunas completas iguais, mesmo longe uma da outra ($caso) $descricao', async ({ montar, posicoes }) => {
+test.each(IGUAIS_NAO_VIZINHAS)('TC-SB-37 linhas e colunas completas iguais, mesmo longe uma da outra ($caso) $descricao', async ({ montar, posicoes, valorEm }) => {
   const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
   await montar(user);
 
   expect(posicoes).toHaveLength(12);
+  for (const pos of posicoes) expect(celula(pos)).toHaveTextContent(new RegExp(`^${valorEm(pos)}$`));
   esperarConflitos(posicoes);
   expect(btn('vazias')).toHaveTextContent(/^24$/);
 });
