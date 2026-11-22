@@ -252,6 +252,7 @@ Salvo quando dito outro, os passos partem de células vazias.
 | TC-SB-45 | Depois da vitória, nenhuma célula muda | Depois do TC-SB-20 (vitória): clique esquerdo e clique direito em `3-1`, `5-5` e `6-5` (vazias na origem) e na fixa `4-1` | As 36 células continuam iguais à `SOLUCAO_PADRAO`; `vazias` = 0; `mensagem` continua "Resolvido!" |
 | TC-SB-46 | Trinca na coluna marca também a célula fixa | `PUZZLE_PADRAO`. Preencher `2-1` e `3-1` com 0 (a coluna 1 fica `.000..`, com a fixa `4-1` = 0) | `2-1`, `3-1` e a fixa `4-1` (`data-fixa` = `true`) com `data-conflito` = `true`; nenhuma outra célula em conflito |
 | TC-SB-47 | Dois conflitos independentes | `PUZZLE_VAZIO`. Preencher `1-1`, `1-2` e `1-3` com 0 e `4-4`, `5-4` e `6-4` com 1; clicar `1-3` (vira 1); clicar `6-4` (vira vazia) | Com os dois: as seis em conflito. Depois de corrigir o primeiro: só `4-4`, `5-4` e `6-4`. Depois de corrigir o segundo: nenhuma |
+| TC-SB-48 | Linhas que diferem só na última célula não são repetidas | `PUZZLE_VAZIO`. Preencher a linha 1 com `001011` e a linha 2 com `001010` | Só `2-1`, `2-2`, `2-4` e `2-6` em conflito (a linha 2 tem quatro 0); a repetição não dispara: as outras 8 células das duas linhas mostram o valor com `data-conflito` = `false` |
 
 ## 6. Fluxo de trabalho no Git
 

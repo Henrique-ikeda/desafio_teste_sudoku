@@ -20,7 +20,7 @@ Regras completas, contrato da tela e divisão das tarefas: [PLANEJAMENTO.md](PLA
 | Nome | RA | GitHub | Parte no trabalho |
 |---|---|---|---|
 | Henrique Kendi Ikeda | 24039456-2 | [Henrique-ikeda](https://github.com/Henrique-ikeda) | Tarefas A1–A5: estrutura do projeto e 12 casos de teste (grade, preenchimento, vazias, limpar e desfazer) |
-| Felipe Galeti Gôngora | 24036480-2 | [FGaleti](https://github.com/FGaleti) | Tarefas F1–F5: CI, README e 35 casos de teste (regras (conflitos), vitória e novo jogo) |
+| Felipe Galeti Gôngora | 24036480-2 | [FGaleti](https://github.com/FGaleti) | Tarefas F1–F5: CI, README e 36 casos de teste (regras (conflitos), vitória e novo jogo) |
 
 As contribuições de cada um aparecem em **Insights → Contributors** e nos commits.
 
@@ -50,7 +50,7 @@ npx jest tests/<arquivo>.spec.js -t "TC-SB-NN"   # um caso só
 - **Metodologia:** TDD, um caso de teste por vez: escrever, rodar, ver falhar pelo motivo certo e fazer o commit `test:`. Uso de IA documentado em [docs/TDD-COM-IA.md](docs/TDD-COM-IA.md).
 - **Integração contínua:** o GitHub Actions ([`.github/workflows/testes.yml`](.github/workflows/testes.yml)) roda `npm ci` e `npm run verificar` em todo push e Pull Request, com Node 18, 20 e 22 no Ubuntu e no Windows. O relatório JSON do Jest e a saída do verificador ficam como artefatos de cada execução. O job `verificar:completo`, que também exige um teste para cada TC do plano, roda sob demanda (*Run workflow*) ou em PR com o rótulo `entrega`.
 
-## Casos de teste (47)
+## Casos de teste (48)
 
 | ID | Cenário | Arquivo | Resultado esperado | Autor |
 |---|---|---|---|---|
@@ -101,6 +101,7 @@ npx jest tests/<arquivo>.spec.js -t "TC-SB-NN"   # um caso só
 | TC-SB-45 | Depois da vitória, nenhuma célula muda | `tests/lacunas-felipe.spec.js` | As 36 células continuam iguais à `SOLUCAO_PADRAO`; `vazias` = 0; `mensagem` continua "Resolvido!" | Felipe |
 | TC-SB-46 | Trinca na coluna marca também a célula fixa | `tests/lacunas-felipe.spec.js` | `2-1`, `3-1` e a fixa `4-1` (`data-fixa` = `true`) com `data-conflito` = `true`; nenhuma outra célula em conflito | Felipe |
 | TC-SB-47 | Dois conflitos independentes | `tests/lacunas-felipe.spec.js` | Com os dois: as seis em conflito. Depois de corrigir o primeiro: só `4-4`, `5-4` e `6-4`. Depois de corrigir o segundo: nenhuma | Felipe |
+| TC-SB-48 | Linhas que diferem só na última célula não são repetidas | `tests/lacunas-felipe.spec.js` | Só `2-1`, `2-2`, `2-4` e `2-6` em conflito (a linha 2 tem quatro 0); a repetição não dispara: as outras 8 células das duas linhas mostram o valor com `data-conflito` = `false` | Felipe |
 
 ## Estrutura
 
