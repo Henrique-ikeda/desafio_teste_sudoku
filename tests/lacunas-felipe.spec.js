@@ -80,3 +80,14 @@ test.each(EXCESSOS_NA_ULTIMA)('TC-SB-35 mais de três 0 na última linha e na ú
   for (const pos of posicoes) expect(celula(pos)).toHaveTextContent(/^0$/);
   esperarConflitos(posicoes);
 });
+
+test('TC-SB-36 mais de três com cinco 0 na linha', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  const zeros = ['1-1', '1-2', '1-4', '1-5', '1-6'];
+  for (const pos of zeros) await preencher(user, pos, '0');
+
+  for (const pos of zeros) expect(celula(pos)).toHaveTextContent(/^0$/);
+  expect(celula('1-3')).toHaveTextContent(/^$/);
+  expect(celula('1-3')).toHaveAttribute('data-conflito', 'false');
+  esperarConflitos(zeros);
+});
