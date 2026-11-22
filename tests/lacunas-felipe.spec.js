@@ -68,3 +68,15 @@ test('TC-SB-34 vitória preenchendo só com o clique direito', async () => {
   expect(btn('vazias')).toHaveTextContent(/^0$/);
   esperarConflitos([]);
 });
+
+const EXCESSOS_NA_ULTIMA = [
+  { caso: 'a', descricao: 'quatro 0 na última linha', posicoes: ['6-1', '6-3', '6-5', '6-6'] },
+  { caso: 'b', descricao: 'quatro 0 na última coluna', posicoes: ['1-6', '3-6', '5-6', '6-6'] },
+];
+test.each(EXCESSOS_NA_ULTIMA)('TC-SB-35 mais de três 0 na última linha e na última coluna ($caso) $descricao', async ({ posicoes }) => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  for (const pos of posicoes) await preencher(user, pos, '0');
+
+  for (const pos of posicoes) expect(celula(pos)).toHaveTextContent(/^0$/);
+  esperarConflitos(posicoes);
+});
