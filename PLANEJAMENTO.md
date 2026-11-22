@@ -247,6 +247,7 @@ Salvo quando dito outro, os passos partem de células vazias.
 | TC-SB-40 | Três iguais no meio da linha e da coluna | `PUZZLE_VAZIO`. Um caso por vez (`test.each`): (a) `1-2`, `1-3` e `1-4` com 1; (b) `1-3`, `1-4` e `1-5` com 0; (c) `2-3`, `3-3` e `4-3` com 1 | Em cada caso, as três células mostram o valor e têm `data-conflito` = `true`; nenhuma outra célula em conflito |
 | TC-SB-41 | A trinca marca só as três iguais, não o vizinho diferente | `PUZZLE_VAZIO`. Preencher `1-1`, `1-2` e `1-3` com 0 e `1-4` com 1 | `1-1`, `1-2` e `1-3` com `data-conflito` = `true`; `1-4` mostra "1" com `false`; nenhuma outra célula em conflito |
 | TC-SB-42 | Some a trinca mas o excesso continua | `PUZZLE_VAZIO`. Preencher a linha 1 com `000001` (cinco 0 e um 1); clicar `1-3` mais uma vez (vira 1) | Antes: `1-1` a `1-5` em conflito (trinca e excesso). Depois: a linha fica `001001` (quatro 0, sem trinca); só `1-1`, `1-2`, `1-4` e `1-5` seguem em conflito (excesso); `1-3` e `1-6` mostram "1" sem conflito |
+| TC-SB-43 | Grade cheia com trinca ou com linhas ou colunas repetidas não vence | `PUZZLE_VAZIO`. Um caso por vez (`test.each`), preenchendo as 36 células com uma grade que tem três 0 e três 1 em toda linha e coluna: (a) só uma trinca (`011100` na linha 6); (b) só as linhas 3 e 6 iguais (`010101`); (c) só as colunas 1 e 3 iguais | Em cada caso, `vazias` = 0 e `mensagem` vazia; só as células da regra quebrada em conflito: (a) `6-2`, `6-3` e `6-4`; (b) as 12 das linhas 3 e 6; (c) as 12 das colunas 1 e 3 |
 
 ## 6. Fluxo de trabalho no Git
 

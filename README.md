@@ -20,7 +20,7 @@ Regras completas, contrato da tela e divisão das tarefas: [PLANEJAMENTO.md](PLA
 | Nome | RA | GitHub | Parte no trabalho |
 |---|---|---|---|
 | Henrique Kendi Ikeda | 24039456-2 | [Henrique-ikeda](https://github.com/Henrique-ikeda) | Tarefas A1–A5: estrutura do projeto e 12 casos de teste (grade, preenchimento, vazias, limpar e desfazer) |
-| Felipe Galeti Gôngora | 24036480-2 | [FGaleti](https://github.com/FGaleti) | Tarefas F1–F5: CI, README e 30 casos de teste (regras (conflitos), vitória e novo jogo) |
+| Felipe Galeti Gôngora | 24036480-2 | [FGaleti](https://github.com/FGaleti) | Tarefas F1–F5: CI, README e 31 casos de teste (regras (conflitos), vitória e novo jogo) |
 
 As contribuições de cada um aparecem em **Insights → Contributors** e nos commits.
 
@@ -50,7 +50,7 @@ npx jest tests/<arquivo>.spec.js -t "TC-SB-NN"   # um caso só
 - **Metodologia:** TDD, um caso de teste por vez: escrever, rodar, ver falhar pelo motivo certo e fazer o commit `test:`. Uso de IA documentado em [docs/TDD-COM-IA.md](docs/TDD-COM-IA.md).
 - **Integração contínua:** o GitHub Actions ([`.github/workflows/testes.yml`](.github/workflows/testes.yml)) roda `npm ci` e `npm run verificar` em todo push e Pull Request, com Node 18, 20 e 22 no Ubuntu e no Windows. O relatório JSON do Jest e a saída do verificador ficam como artefatos de cada execução. O job `verificar:completo`, que também exige um teste para cada TC do plano, roda sob demanda (*Run workflow*) ou em PR com o rótulo `entrega`.
 
-## Casos de teste (42)
+## Casos de teste (43)
 
 | ID | Cenário | Arquivo | Resultado esperado | Autor |
 |---|---|---|---|---|
@@ -96,6 +96,7 @@ npx jest tests/<arquivo>.spec.js -t "TC-SB-NN"   # um caso só
 | TC-SB-40 | Três iguais no meio da linha e da coluna | `tests/lacunas-felipe.spec.js` | Em cada caso, as três células mostram o valor e têm `data-conflito` = `true`; nenhuma outra célula em conflito | Felipe |
 | TC-SB-41 | A trinca marca só as três iguais, não o vizinho diferente | `tests/lacunas-felipe.spec.js` | `1-1`, `1-2` e `1-3` com `data-conflito` = `true`; `1-4` mostra "1" com `false`; nenhuma outra célula em conflito | Felipe |
 | TC-SB-42 | Some a trinca mas o excesso continua | `tests/lacunas-felipe.spec.js` | Antes: `1-1` a `1-5` em conflito (trinca e excesso). Depois: a linha fica `001001` (quatro 0, sem trinca); só `1-1`, `1-2`, `1-4` e `1-5` seguem em conflito (excesso); `1-3` e `1-6` mostram "1" sem conflito | Felipe |
+| TC-SB-43 | Grade cheia com trinca ou com linhas ou colunas repetidas não vence | `tests/lacunas-felipe.spec.js` | Em cada caso, `vazias` = 0 e `mensagem` vazia; só as células da regra quebrada em conflito: (a) `6-2`, `6-3` e `6-4`; (b) as 12 das linhas 3 e 6; (c) as 12 das colunas 1 e 3 | Felipe |
 
 ## Estrutura
 
