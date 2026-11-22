@@ -62,3 +62,32 @@ test('TC-SB-07 limpar', async () => {
   // Limpar conta como jogada (seção 1): Desfazer fica habilitado.
   expect(desfazer()).toBeEnabled();
 });
+
+test('TC-SB-08 desfazer', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_PADRAO });
+  // Duas jogadas (dois cliques esquerdos em 1-1): vazia -> 0 -> 1.
+  await user.click(celula('1-1'));
+  await user.click(celula('1-1'));
+
+  expect(celula('1-1')).toHaveTextContent(/^1$/);
+  expect(vazias()).toHaveTextContent(/^26$/);
+
+  // 1º desfazer: volta a última jogada (1 -> 0).
+  await user.click(desfazer());
+  expect(celula('1-1')).toHaveTextContent(/^0$/);
+  expect(vazias()).toHaveTextContent(/^26$/);
+  expect(desfazer()).toBeEnabled();
+
+  // 2º desfazer: volta a jogada anterior (0 -> vazia).
+  await user.click(desfazer());
+  expect(celula('1-1').textContent.trim()).toBe('');
+  expect(vazias()).toHaveTextContent(/^27$/);
+  expect(desfazer()).toBeDisabled();
+
+  // As 9 fixas continuam com o mesmo valor e fixas.
+  const grade = varrerGrade();
+  for (const [pos, valor] of Object.entries(FIXAS_PADRAO)) {
+    expect(grade[pos].texto).toBe(valor);
+    expect(grade[pos].fixa).toBe('true');
+  }
+});
