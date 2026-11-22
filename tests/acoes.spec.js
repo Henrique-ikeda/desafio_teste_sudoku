@@ -1,5 +1,5 @@
 // Testes de Limpar e desfazer (tarefas A4 e A5). Contrato: seções 1, 3 e 5 do PLANEJAMENTO.md.
-import { abrirJogo, celula, screen, preencher, PUZZLE_PADRAO } from './helpers.js';
+import { abrirJogo, celula, screen, preencher, PUZZLE_PADRAO, PUZZLE_VAZIO } from './helpers.js';
 
 // Fixas do PUZZLE_PADRAO (seção 3): 1-5=1, 2-4=1, 2-6=1, 3-2=1, 3-5=1, 4-1=0, 4-3=0, 4-4=0, 6-6=0.
 // Derivadas do próprio PUZZLE_PADRAO: cada caractere diferente de '.' é uma fixa.
@@ -138,5 +138,31 @@ test('TC-SB-10 desfazer o limpar', async () => {
   for (const [pos, valor] of Object.entries(FIXAS_PADRAO)) {
     expect(grade[pos].texto).toBe(valor);
     expect(grade[pos].fixa).toBe('true');
+  }
+});
+
+// TC-SB-11 (tarefa A5): dois iguais seguidos (0, 0) não são conflito; só três seguidos são.
+test('TC-SB-11 dois iguais seguidos não é conflito', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  await preencher(user, '1-1', '0');
+  await preencher(user, '1-2', '0');
+
+  // As duas mostram "0" e não estão em conflito.
+  expect(celula('1-1')).toHaveTextContent(/^0$/);
+  expect(celula('1-1')).toHaveAttribute('data-conflito', 'false');
+  expect(celula('1-2')).toHaveTextContent(/^0$/);
+  expect(celula('1-2')).toHaveAttribute('data-conflito', 'false');
+
+  // A terceira célula da linha continua vazia e sem conflito.
+  expect(celula('1-3').textContent.trim()).toBe('');
+  expect(celula('1-3')).toHaveAttribute('data-conflito', 'false');
+
+  // As 34 vazias restantes (36 - 2 preenchidas).
+  expect(vazias()).toHaveTextContent(/^34$/);
+
+  // Nenhuma das 36 células está em conflito.
+  const grade = varrerGrade();
+  for (const pos of Object.keys(grade)) {
+    expect(grade[pos].conflito).toBe('false');
   }
 });
