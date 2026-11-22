@@ -29,3 +29,18 @@ test('TC-SB-31 desfazer remove o conflito', async () => {
   expect(btn('vazias')).toHaveTextContent(/^34$/);
   esperarConflitos([]);
 });
+
+test('TC-SB-32 clique direito gera e desfaz conflito, e o Desfazer volta o clique direito', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  for (const pos of ['1-1', '1-2', '1-3']) await cliqueDireito(user, celula(pos)); // vazia -> 1
+  for (const pos of ['1-1', '1-2', '1-3']) expect(celula(pos)).toHaveTextContent(/^1$/);
+  esperarConflitos(['1-1', '1-2', '1-3']);
+
+  await cliqueDireito(user, celula('1-3')); // 1 -> 0: a trinca deixa de existir
+  expect(celula('1-3')).toHaveTextContent(/^0$/);
+  esperarConflitos([]);
+
+  await user.click(btn('btn-desfazer')); // desfaz o último clique direito
+  expect(celula('1-3')).toHaveTextContent(/^1$/);
+  esperarConflitos(['1-1', '1-2', '1-3']);
+});
