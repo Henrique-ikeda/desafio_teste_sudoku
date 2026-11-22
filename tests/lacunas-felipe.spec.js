@@ -217,3 +217,18 @@ test('TC-SB-46 trinca na coluna marca também a célula fixa', async () => {
   expect(celula('4-1')).toHaveTextContent(/^0$/);
   esperarConflitos(['2-1', '3-1', '4-1']);
 });
+
+test('TC-SB-47 dois conflitos independentes', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  await preencherLinha(user, 1, '000');
+  for (const pos of ['4-4', '5-4', '6-4']) await preencher(user, pos, '1');
+  esperarConflitos(['1-1', '1-2', '1-3', '4-4', '5-4', '6-4']);
+
+  await user.click(celula('1-3')); // 0 -> 1: corrige o primeiro conflito
+  expect(celula('1-3')).toHaveTextContent(/^1$/);
+  esperarConflitos(['4-4', '5-4', '6-4']);
+
+  await user.click(celula('6-4')); // 1 -> vazia: corrige o segundo
+  expect(celula('6-4')).toHaveTextContent(/^$/);
+  esperarConflitos([]);
+});
