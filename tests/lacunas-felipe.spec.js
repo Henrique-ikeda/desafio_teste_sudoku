@@ -142,3 +142,12 @@ test.each(TRINCAS_NO_MEIO)('TC-SB-40 três iguais no meio da linha e da coluna (
   for (const pos of posicoes) expect(celula(pos)).toHaveTextContent(new RegExp(`^${valor}$`));
   esperarConflitos(posicoes);
 });
+
+test('TC-SB-41 a trinca marca só as três iguais, não o vizinho diferente', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  await preencherLinha(user, 1, '0001');
+
+  expect(celula('1-4')).toHaveTextContent(/^1$/);
+  expect(celula('1-4')).toHaveAttribute('data-conflito', 'false');
+  esperarConflitos(['1-1', '1-2', '1-3']);
+});
