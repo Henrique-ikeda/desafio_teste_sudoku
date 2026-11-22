@@ -166,3 +166,36 @@ test('TC-SB-11 dois iguais seguidos não é conflito', async () => {
     expect(grade[pos].conflito).toBe('false');
   }
 });
+
+// TC-SB-12 (tarefa A5): linhas iguais e incompletas (00101 nas linhas 1 e 2) não são conflito.
+test('TC-SB-12 linhas iguais incompletas não são conflito', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  const VALORES = '00101';
+  for (const l of [1, 2]) {
+    for (let c = 1; c <= 5; c++) {
+      await preencher(user, `${l}-${c}`, VALORES[c - 1]);
+    }
+  }
+
+  // As 10 células preenchidas mostram o valor e não estão em conflito.
+  for (const l of [1, 2]) {
+    for (let c = 1; c <= 5; c++) {
+      const valor = VALORES[c - 1];
+      expect(celula(`${l}-${c}`)).toHaveTextContent(new RegExp(`^${valor}$`));
+      expect(celula(`${l}-${c}`)).toHaveAttribute('data-conflito', 'false');
+    }
+  }
+
+  // A coluna 6 das linhas 1 e 2 continua vazia.
+  expect(celula('1-6').textContent.trim()).toBe('');
+  expect(celula('2-6').textContent.trim()).toBe('');
+
+  // As 26 vazias restantes (36 - 10 preenchidas).
+  expect(vazias()).toHaveTextContent(/^26$/);
+
+  // Nenhuma das 36 células está em conflito.
+  const grade = varrerGrade();
+  for (const pos of Object.keys(grade)) {
+    expect(grade[pos].conflito).toBe('false');
+  }
+});
