@@ -20,7 +20,7 @@ Regras completas, contrato da tela e divisão das tarefas: [PLANEJAMENTO.md](PLA
 | Nome | RA | GitHub | Parte no trabalho |
 |---|---|---|---|
 | Henrique Kendi Ikeda | 24039456-2 | [Henrique-ikeda](https://github.com/Henrique-ikeda) | Tarefas A1–A5: estrutura do projeto e 12 casos de teste (grade, preenchimento, vazias, limpar e desfazer) |
-| Felipe Galeti Gôngora | 24036480-2 | [FGaleti](https://github.com/FGaleti) | Tarefas F1–F5: CI, README e 27 casos de teste (regras (conflitos), vitória e novo jogo) |
+| Felipe Galeti Gôngora | 24036480-2 | [FGaleti](https://github.com/FGaleti) | Tarefas F1–F5: CI, README e 28 casos de teste (regras (conflitos), vitória e novo jogo) |
 
 As contribuições de cada um aparecem em **Insights → Contributors** e nos commits.
 
@@ -50,7 +50,7 @@ npx jest tests/<arquivo>.spec.js -t "TC-SB-NN"   # um caso só
 - **Metodologia:** TDD, um caso de teste por vez: escrever, rodar, ver falhar pelo motivo certo e fazer o commit `test:`. Uso de IA documentado em [docs/TDD-COM-IA.md](docs/TDD-COM-IA.md).
 - **Integração contínua:** o GitHub Actions ([`.github/workflows/testes.yml`](.github/workflows/testes.yml)) roda `npm ci` e `npm run verificar` em todo push e Pull Request, com Node 18, 20 e 22 no Ubuntu e no Windows. O relatório JSON do Jest e a saída do verificador ficam como artefatos de cada execução. O job `verificar:completo`, que também exige um teste para cada TC do plano, roda sob demanda (*Run workflow*) ou em PR com o rótulo `entrega`.
 
-## Casos de teste (39)
+## Casos de teste (40)
 
 | ID | Cenário | Arquivo | Resultado esperado | Autor |
 |---|---|---|---|---|
@@ -93,6 +93,7 @@ npx jest tests/<arquivo>.spec.js -t "TC-SB-NN"   # um caso só
 | TC-SB-37 | Linhas e colunas completas iguais, mesmo longe uma da outra | `tests/lacunas-felipe.spec.js` | Em cada caso, as 12 células das duas linhas (ou colunas) mostram o valor e têm `data-conflito` = `true`; nenhuma outra célula em conflito | Felipe |
 | TC-SB-38 | Linhas iguais marcam também as células fixas | `tests/lacunas-felipe.spec.js` | `2-6` = "1" e `vazias` = 24; as 12 células das linhas 1 e 2 com `data-conflito` = `true`, inclusive as 11 fixas (`data-fixa` = `true`); nenhuma outra | Felipe |
 | TC-SB-39 | Célula fixa de valor 0 não muda | `tests/lacunas-felipe.spec.js` | `4-1` e `6-6` continuam "0" com `data-fixa` = `true`; `vazias` continua 27; `btn-desfazer` continua desabilitado | Felipe |
+| TC-SB-40 | Três iguais no meio da linha e da coluna | `tests/lacunas-felipe.spec.js` | Em cada caso, as três células mostram o valor e têm `data-conflito` = `true`; nenhuma outra célula em conflito | Felipe |
 
 ## Estrutura
 
