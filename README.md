@@ -20,7 +20,7 @@ Regras completas, contrato da tela e divisão das tarefas: [PLANEJAMENTO.md](PLA
 | Nome | RA | GitHub | Parte no trabalho |
 |---|---|---|---|
 | Henrique Kendi Ikeda | 24039456-2 | [Henrique-ikeda](https://github.com/Henrique-ikeda) | Tarefas A1–A5: estrutura do projeto e 12 casos de teste (grade, preenchimento, vazias, limpar e desfazer) |
-| Felipe Galeti Gôngora | 24036480-2 | [FGaleti](https://github.com/FGaleti) | Tarefas F1–F5: CI, README e 17 casos de teste (regras (conflitos), vitória e novo jogo) |
+| Felipe Galeti Gôngora | 24036480-2 | [FGaleti](https://github.com/FGaleti) | Tarefas F1–F5: CI, README e 18 casos de teste (regras (conflitos), vitória e novo jogo) |
 
 As contribuições de cada um aparecem em **Insights → Contributors** e nos commits.
 
@@ -46,11 +46,11 @@ npx jest tests/<arquivo>.spec.js -t "TC-SB-NN"   # um caso só
 - **Testes de interface:** cada teste abre o `index.html` do jogo pela função `abrirJogo(params)` de `tests/helpers.js`, clica como um jogador e confere o que aparece na tela. Os testes não chamam funções internas do jogo.
 - **Elementos da tela:** encontrados pelo atributo `data-testid` (`celula-<linha>-<coluna>`, `vazias`, `mensagem`, `btn-limpar`, `btn-desfazer`, `btn-novo-jogo`). O valor da célula é o texto (`0`, `1` ou vazio); `data-fixa` e `data-conflito` dizem se ela é do puzzle e se está quebrando uma regra.
 - **Sem depender de sorte:** o puzzle é passado pelo parâmetro de URL `puzzle` (36 caracteres: `0`, `1` ou `.`). `PUZZLE_PADRAO` tem 9 células fixas e solução única (`SOLUCAO_PADRAO`, conferida por script); `PUZZLE_VAZIO` deixa a grade toda livre para montar cada situação de regra em poucos cliques.
-- **Rastreabilidade:** cada teste tem no título o ID do caso (`TC-SB-NN`), o mesmo da tabela abaixo e da seção 5 do PLANEJAMENTO.md. A [matriz de cobertura](docs/MATRIZ-COBERTURA.md) liga cada regra do jogo aos seus casos.
+- **Rastreabilidade:** cada teste tem no título o ID do caso (`TC-SB-NN`), o mesmo da tabela abaixo e da seção 5 do PLANEJAMENTO.md. A [matriz de cobertura](docs/MATRIZ-COBERTURA.md) liga cada regra do jogo aos seus casos. Os testes do Felipe foram conferidos contra uma implementação de referência (fora do repositório) e por mutação: [docs/VALIDACAO-TESTES-FELIPE.md](docs/VALIDACAO-TESTES-FELIPE.md).
 - **Metodologia:** TDD, um caso de teste por vez: escrever, rodar, ver falhar pelo motivo certo e fazer o commit `test:`. Uso de IA documentado em [docs/TDD-COM-IA.md](docs/TDD-COM-IA.md).
 - **Integração contínua:** o GitHub Actions ([`.github/workflows/testes.yml`](.github/workflows/testes.yml)) roda `npm ci` e `npm run verificar` em todo push e Pull Request, com Node 18, 20 e 22 no Ubuntu e no Windows. O relatório JSON do Jest e a saída do verificador ficam como artefatos de cada execução. O job `verificar:completo`, que também exige um teste para cada TC do plano, roda sob demanda (*Run workflow*) ou em PR com o rótulo `entrega`.
 
-## Casos de teste (29)
+## Casos de teste (30)
 
 | ID | Cenário | Arquivo | Resultado esperado | Autor |
 |---|---|---|---|---|
@@ -82,6 +82,7 @@ npx jest tests/<arquivo>.spec.js -t "TC-SB-NN"   # um caso só
 | TC-SB-26 | Mais de três nas combinações que faltam | `tests/regras.spec.js` | Em cada caso, as quatro células mostram o valor e têm `data-conflito` = `true`; nenhuma outra célula em conflito | Felipe |
 | TC-SB-27 | Exatamente três iguais sem trinca não é conflito | `tests/regras.spec.js` | Com três 0: as três mostram "0" e nenhuma célula está em conflito. Com o quarto 0: `1-1`, `1-3`, `1-5` e `1-6` com `data-conflito` = `true` e nenhuma outra | Felipe |
 | TC-SB-28 | Conflito de linhas iguais some ao corrigir | `tests/regras.spec.js` | Antes: as 12 células das linhas 1 e 2 em conflito. Depois: `2-6` vazia e nenhuma célula em conflito | Felipe |
+| TC-SB-29 | Novo jogo depois da vitória desbloqueia o jogo | `tests/fim-de-jogo.spec.js` | `mensagem` vazia; `1-1` = "0"; `vazias` = 26; `btn-desfazer` habilitado | Felipe |
 | TC-SB-30 | Conflito some depois do Limpar | `tests/regras.spec.js` | Antes: as três em conflito. Depois: `1-1`, `1-2` e `1-3` vazias; nenhuma célula em conflito; `vazias` = 36 | Felipe |
 
 ## Estrutura
@@ -93,5 +94,5 @@ tests/helpers.js              abrirJogo(), PUZZLE_PADRAO e atalhos
 tests/*.spec.js               casos de teste
 scripts/verificar-testes.mjs  verificador (npm run verificar e CI)
 PLANEJAMENTO.md               regras, contrato, tarefas e casos de teste
-docs/                         matriz de cobertura e TDD com IA
+docs/                         matriz de cobertura, TDD com IA e validação dos testes
 ```

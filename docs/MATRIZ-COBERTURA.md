@@ -16,7 +16,7 @@ Cada regra da seção 1 do PLANEJAMENTO.md tem pelo menos um caso de teste que o
 | 10 | Linhas e colunas completas não podem ser iguais; incompletas não contam | 12, 17, 18, 28 |
 | 11 | Conflito some quando a regra deixa de ser quebrada | 19, 28, 30 |
 | 12 | Conflito vale também para as células fixas | 24 |
-| 13 | Vitória só com a grade cheia e sem conflito; grade bloqueada depois | 20, 21, 22 |
-| 14 | Novo jogo volta o puzzle ao começo | 23 |
+| 13 | Vitória só com a grade cheia e sem conflito; grade bloqueada depois | 20, 21, 22, 29 |
+| 14 | Novo jogo volta o puzzle ao começo | 23, 29 |
 
 **Para que serve:** se alguém fosse implementar o jogo só a partir destes testes, toda regra do jogo teria um teste exigindo que ela exista.

@@ -1,0 +1,97 @@
+// Casos de teste de vitória e novo jogo — tarefa F5 do Felipe. Contrato: seções 1, 3 e 5 do PLANEJAMENTO.md.
+import { abrirJogo, celula, preencher, celulasEmConflito, screen, PUZZLE_PADRAO, SOLUCAO_PADRAO, VAZIAS_PADRAO, TODAS_AS_POSICOES, solucao, cliqueDireito } from './helpers.js';
+
+// Posições 'L-C' com data-conflito = "true", em ordem (conjunto EXATO).
+const posicoesEmConflito = () => celulasEmConflito().map((c) => c.getAttribute('data-testid').replace('celula-', '')).sort();
+
+// Preenche as 27 vazias do PUZZLE_PADRAO com a SOLUCAO_PADRAO, na ordem de VAZIAS_PADRAO.
+// `trocas` sobrescreve o valor de alguma posição (ex.: { '1-1': '1' }).
+// Preencher "1" passa por "0", então há conflitos passageiros no caminho: só confira no fim.
+async function preencherSolucao(user, trocas = {}) { for (const pos of VAZIAS_PADRAO) await preencher(user, pos, trocas[pos] ?? solucao(pos)); }
+
+// A grade inteira lida da tela, linha por linha (vazia = '.'), para comparar com SOLUCAO_PADRAO.
+const gradeNaTela = () => TODAS_AS_POSICOES.map((pos) => celula(pos).textContent || '.').join('');
+
+test('TC-SB-20 vitória', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_PADRAO });
+  await preencherSolucao(user);
+
+  expect(gradeNaTela()).toBe(SOLUCAO_PADRAO);
+  expect(screen.getByTestId('mensagem')).toHaveTextContent(/^Resolvido!$/);
+  expect(screen.getByTestId('vazias')).toHaveTextContent(/^0$/);
+  expect(posicoesEmConflito()).toEqual([]);
+});
+
+test('TC-SB-21 grade cheia com erro não vence', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_PADRAO });
+  await preencherSolucao(user, { '1-1': '1' }); // 1-1 recebe 1 em vez de 0
+
+  expect(celula('1-1')).toHaveTextContent(/^1$/);
+  expect(screen.getByTestId('vazias')).toHaveTextContent(/^0$/);
+  expect(screen.getByTestId('mensagem')).toHaveTextContent(/^$/);
+  expect(celula('1-1')).toHaveAttribute('data-conflito', 'true');
+  // A linha 1 fica 101011 (quatro 1) e a coluna 1 também fica 101011 (quatro 1): todas as células com 1 nas duas.
+  expect(posicoesEmConflito()).toEqual(['1-1', '1-3', '1-5', '1-6', '3-1', '5-1', '6-1']);
+});
+
+test('TC-SB-22 grade bloqueada após a vitória', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_PADRAO });
+  await preencherSolucao(user); // cenário do TC-SB-20
+  expect(screen.getByTestId('mensagem')).toHaveTextContent(/^Resolvido!$/); // garante que venceu antes de testar o bloqueio
+
+  // Ações depois da vitória: a grade não pode mudar em nenhuma delas.
+  const acoes = [
+    ['clique esquerdo em 1-1', () => user.click(celula('1-1'))],
+    ['clique direito em 1-1', () => cliqueDireito(user, celula('1-1'))],
+    ['Limpar', () => user.click(screen.getByTestId('btn-limpar'))],
+    ['Desfazer', () => user.click(screen.getByTestId('btn-desfazer'))],
+  ];
+  for (const [, acao] of acoes) {
+    await acao();
+    expect(celula('1-1')).toHaveTextContent(/^0$/);
+    expect(gradeNaTela()).toBe(SOLUCAO_PADRAO); // as 36 células não mudam
+    expect(screen.getByTestId('vazias')).toHaveTextContent(/^0$/);
+    expect(screen.getByTestId('mensagem')).toHaveTextContent(/^Resolvido!$/);
+  }
+});
+
+// As 9 fixas do PUZZLE_PADRAO (seção 3), com o valor de cada uma.
+const FIXAS_PADRAO = TODAS_AS_POSICOES.map((pos, i) => [pos, PUZZLE_PADRAO[i]]).filter(([, v]) => v !== '.');
+
+test('TC-SB-23 novo jogo', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_PADRAO });
+  await preencher(user, '1-1', '0');
+
+  // Antes do botão: garante que a jogada aconteceu.
+  expect(celula('1-1')).toHaveTextContent(/^0$/);
+  expect(screen.getByTestId('btn-desfazer')).not.toBeDisabled();
+
+  await user.click(screen.getByTestId('btn-novo-jogo'));
+
+  // Depois: volta ao puzzle inicial.
+  expect(celula('1-1')).toHaveTextContent(/^$/);
+  expect(FIXAS_PADRAO).toHaveLength(9);
+  for (const [pos, valor] of FIXAS_PADRAO) {
+    expect(celula(pos)).toHaveAttribute('data-fixa', 'true');
+    expect(celula(pos)).toHaveTextContent(new RegExp(`^${valor}$`));
+  }
+  expect(screen.getByTestId('vazias')).toHaveTextContent(/^27$/);
+  expect(screen.getByTestId('btn-desfazer')).toBeDisabled();
+  expect(screen.getByTestId('mensagem')).toHaveTextContent(/^$/);
+  expect(posicoesEmConflito()).toEqual([]);
+});
+
+test('TC-SB-29 novo jogo depois da vitória desbloqueia o jogo', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_PADRAO });
+  await preencherSolucao(user); // vitória (cenário do TC-SB-20)
+  expect(screen.getByTestId('mensagem')).toHaveTextContent(/^Resolvido!$/);
+
+  await user.click(screen.getByTestId('btn-novo-jogo'));
+  expect(screen.getByTestId('mensagem')).toHaveTextContent(/^$/);
+  expect(celula('1-1')).toHaveTextContent(/^$/);
+
+  await user.click(celula('1-1')); // a grade voltou a aceitar cliques
+  expect(celula('1-1')).toHaveTextContent(/^0$/);
+  expect(screen.getByTestId('vazias')).toHaveTextContent(/^26$/);
+  expect(screen.getByTestId('btn-desfazer')).not.toBeDisabled();
+});
