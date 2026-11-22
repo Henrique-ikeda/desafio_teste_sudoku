@@ -43,7 +43,7 @@ Os testes conferem mais do que a linha da seção 5, sempre com algo que decorre
 
 ## Achados e decisões pendentes da dupla
 
-1. **Verificador não roda no Windows.** `scripts/verificar-testes.mjs` chama `node_modules/.bin/jest.cmd` com `spawnSync` sem shell, e o Node (≥ 18.20.2 / 20.12.2) responde `EINVAL`; o verificador sai com "O Jest não gerou resultado". Correção sugerida (2 linhas): rodar `node_modules/jest/bin/jest.js` com `process.execPath`. O arquivo é da A1, então não foi alterado; por isso, na CI, o Windows roda com `continue-on-error`.
+1. **Verificador não roda no Windows.** `scripts/verificar-testes.mjs` chama `node_modules/.bin/jest.cmd` com `spawnSync` sem shell, e o Node (≥ 18.20.2 / 20.12.2) responde `EINVAL`; o verificador sai com "O Jest não gerou resultado". **Corrigido no PR #1**, num commit `chore:` separado (2 linhas): o verificador roda `node_modules/jest/bin/jest.js` com `process.execPath`. Com isso, a CI roda o Windows sem `continue-on-error`.
 2. **`npm ci` com npm 11 (Node 24):** falha com "Missing: fsevents@2.3.3 from lock file". Com npm 10 (Node 18, 20 e 22, os da CI) funciona. Regerar o `package-lock.json` resolve (arquivo da A1).
 3. **Novo jogo sem o parâmetro `puzzle`:** a seção 1 diz que ele carrega um puzzle do banco, mas não diz se é o mesmo ou outro. Nenhum teste assume nada sobre isso.
 4. **Desfazer depois do Novo jogo:** o TC-SB-23 exige `btn-desfazer` desabilitado, o que implica perder o histórico anterior. A seção 1 não diz isso com todas as letras ("nada para desfazer").
