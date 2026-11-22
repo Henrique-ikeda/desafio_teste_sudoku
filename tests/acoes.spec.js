@@ -91,3 +91,22 @@ test('TC-SB-08 desfazer', async () => {
     expect(grade[pos].fixa).toBe('true');
   }
 });
+
+test('TC-SB-09 desfazer desabilitado sem jogadas', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_PADRAO });
+
+  // Ao abrir, não há jogada para desfazer; o jogo existe (27 vazias).
+  expect(desfazer()).toBeDisabled();
+  expect(vazias()).toHaveTextContent(/^27$/);
+
+  // Uma jogada habilita o Desfazer.
+  await user.click(celula('1-1'));
+  expect(celula('1-1')).toHaveTextContent(/^0$/);
+  expect(desfazer()).toBeEnabled();
+
+  // Desfazer a única jogada desabilita o Desfazer de novo.
+  await user.click(desfazer());
+  expect(desfazer()).toBeDisabled();
+  expect(celula('1-1').textContent.trim()).toBe('');
+  expect(vazias()).toHaveTextContent(/^27$/);
+});
