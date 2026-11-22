@@ -104,3 +104,16 @@ test.each(IGUAIS_NAO_VIZINHAS)('TC-SB-37 linhas e colunas completas iguais, mesm
   esperarConflitos(posicoes);
   expect(btn('vazias')).toHaveTextContent(/^24$/);
 });
+
+const PUZZLE_LINHAS_COM_FIXAS = '001011' + '00101.' + '.'.repeat(24);
+test('TC-SB-38 linhas iguais marcam também as células fixas', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_LINHAS_COM_FIXAS });
+
+  await preencher(user, '2-6', '1'); // só agora a linha 2 fica completa e igual à linha 1
+  expect(celula('2-6')).toHaveTextContent(/^1$/);
+  expect(btn('vazias')).toHaveTextContent(/^24$/);
+  const fixas = posicoesDasLinhas(1, 2).filter((pos) => pos !== '2-6');
+  expect(fixas).toHaveLength(11);
+  for (const pos of fixas) expect(celula(pos)).toHaveAttribute('data-fixa', 'true');
+  esperarConflitos(posicoesDasLinhas(1, 2));
+});
