@@ -129,3 +129,16 @@ test('TC-SB-39 célula fixa de valor 0 não muda', async () => {
   expect(btn('vazias')).toHaveTextContent(/^27$/);
   expect(btn('btn-desfazer')).toBeDisabled();
 });
+
+const TRINCAS_NO_MEIO = [
+  { caso: 'a', descricao: 'três 1 no meio da linha (1-2 a 1-4)', posicoes: ['1-2', '1-3', '1-4'], valor: '1' },
+  { caso: 'b', descricao: 'três 0 no meio da linha (1-3 a 1-5)', posicoes: ['1-3', '1-4', '1-5'], valor: '0' },
+  { caso: 'c', descricao: 'três 1 no meio da coluna (2-3 a 4-3)', posicoes: ['2-3', '3-3', '4-3'], valor: '1' },
+];
+test.each(TRINCAS_NO_MEIO)('TC-SB-40 três iguais no meio da linha e da coluna ($caso) $descricao', async ({ posicoes, valor }) => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  for (const pos of posicoes) await preencher(user, pos, valor);
+
+  for (const pos of posicoes) expect(celula(pos)).toHaveTextContent(new RegExp(`^${valor}$`));
+  esperarConflitos(posicoes);
+});
