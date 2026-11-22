@@ -239,6 +239,7 @@ Salvo quando dito outro, os passos partem de células vazias.
 | TC-SB-32 | Clique direito gera e desfaz conflito, e o Desfazer volta o clique direito | `PUZZLE_VAZIO`. Clique direito em `1-1`, `1-2` e `1-3` (cada uma vira "1"); clique direito de novo em `1-3` (vira "0"); `btn-desfazer` | Após os 3 cliques: as três em conflito. Após o 4º clique: `1-3` = "0" e nenhuma em conflito. Depois de desfazer: `1-3` volta a "1" e as três ficam em conflito |
 | TC-SB-33 | Novo jogo limpa os conflitos | `PUZZLE_VAZIO`. Preencher `1-1`, `1-2` e `1-3` com 0; clicar `btn-novo-jogo` | Antes: as três em conflito. Depois: as três vazias com `data-conflito` = `false`, `vazias` = 36 e nenhuma célula em conflito |
 | TC-SB-34 | Vitória preenchendo só com o clique direito | `PUZZLE_PADRAO`. Preencher as 27 vazias com a `SOLUCAO_PADRAO` só pelo clique direito (valor 1 = 1 clique; valor 0 = 2 cliques) | As 36 células iguais à `SOLUCAO_PADRAO`; `mensagem` = "Resolvido!"; `vazias` = 0; nenhuma célula em conflito |
+| TC-SB-35 | Mais de três 0 na última linha e na última coluna | `PUZZLE_VAZIO`. Um caso por vez (`test.each`): (a) `6-1`, `6-3`, `6-5` e `6-6` com 0 (última linha); (b) `1-6`, `3-6`, `5-6` e `6-6` com 0 (última coluna) | Em cada caso, as quatro células mostram "0" e têm `data-conflito` = `true`; nenhuma outra célula em conflito |
 
 ## 6. Fluxo de trabalho no Git
 
