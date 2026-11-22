@@ -3,6 +3,10 @@
 // (a lista de mutantes está em docs/VALIDACAO-TESTES-FELIPE.md).
 import { abrirJogo, celula, preencher, preencherLinha, preencherColuna, cliqueDireito, celulasEmConflito, screen, PUZZLE_PADRAO, PUZZLE_VAZIO, SOLUCAO_PADRAO, VAZIAS_PADRAO, TODAS_AS_POSICOES, solucao } from './helpers.js';
 
+// Alguns casos preenchem a grade inteira pelos cliques (54 a 72 cliques) e levam 2 a 3 s; em máquina lenta
+// isso passaria dos 5 s padrão do Jest e daria falha que não é de comportamento.
+jest.setTimeout(30000);
+
 // Posições 'L-C' com data-conflito = "true", em ordem: para conferir o conjunto EXATO
 // (pega implementação que marca demais, como a linha inteira, ou de menos).
 const posicoesEmConflito = () => celulasEmConflito().map((c) => c.getAttribute('data-testid').replace('celula-', '')).sort();
