@@ -110,3 +110,33 @@ test('TC-SB-09 desfazer desabilitado sem jogadas', async () => {
   expect(celula('1-1').textContent.trim()).toBe('');
   expect(vazias()).toHaveTextContent(/^27$/);
 });
+
+test('TC-SB-10 desfazer o limpar', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_PADRAO });
+  // Três jogadas: 1-1 = 0 (1 clique) e 1-2 = 1 (2 cliques).
+  await preencher(user, '1-1', '0');
+  await preencher(user, '1-2', '1');
+
+  await user.click(screen.getByTestId('btn-limpar'));
+
+  // Depois do Limpar: as duas jogadas somem e as 27 vazias voltam.
+  expect(celula('1-1').textContent.trim()).toBe('');
+  expect(celula('1-2').textContent.trim()).toBe('');
+  expect(vazias()).toHaveTextContent(/^27$/);
+
+  await user.click(desfazer());
+
+  // Depois do Desfazer: o Limpar é desfeito e as jogadas de preencher voltam.
+  expect(celula('1-1')).toHaveTextContent(/^0$/);
+  expect(celula('1-2')).toHaveTextContent(/^1$/);
+  expect(vazias()).toHaveTextContent(/^25$/);
+  // Ainda restam as jogadas de preencher para desfazer.
+  expect(desfazer()).toBeEnabled();
+
+  // As 9 fixas continuam com o mesmo valor e fixas.
+  const grade = varrerGrade();
+  for (const [pos, valor] of Object.entries(FIXAS_PADRAO)) {
+    expect(grade[pos].texto).toBe(valor);
+    expect(grade[pos].fixa).toBe('true');
+  }
+});
