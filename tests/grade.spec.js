@@ -1,4 +1,4 @@
-import { abrirJogo, celula, within, cliqueDireito, screen, PUZZLE_PADRAO, TODAS_AS_POSICOES } from './helpers.js';
+import { abrirJogo, celula, within, cliqueDireito, preencher, screen, PUZZLE_PADRAO, TODAS_AS_POSICOES } from './helpers.js';
 
 // Fixas do PUZZLE_PADRAO, conforme a seção 3 do PLANEJAMENTO.md (posição -> valor).
 const FIXAS_ESPERADAS = {
@@ -190,4 +190,28 @@ test('TC-SB-05 ciclo do clique direito', async () => {
     expect(screen.getByTestId('vazias')).toHaveTextContent(new RegExp(`^${vazias}$`));
     expect(celula('1-1')).toHaveAttribute('data-fixa', 'false');
   }
+});
+
+test('TC-SB-06 contador de vazias', async () => {
+  // PUZZLE_PADRAO: 27 vazias. Preencher 1-1 com 0 deixa 26; preencher 1-2 com 1 deixa 25.
+  // Clicar 1-1 mais duas vezes (1 -> vazia) volta a 26. Clique esquerdo em 1-1: vazia -> 0 -> 1 -> vazia.
+  const user = await abrirJogo({ puzzle: PUZZLE_PADRAO });
+
+  // Passo 1: 1-1 recebe 0; contador em 26.
+  await preencher(user, '1-1', '0');
+  expect(celula('1-1')).toHaveTextContent(/^0$/);
+  expect(screen.getByTestId('vazias')).toHaveTextContent(/^26$/);
+
+  // Passo 2: 1-2 recebe 1; 1-1 continua 0; contador em 25.
+  await preencher(user, '1-2', '1');
+  expect(celula('1-1')).toHaveTextContent(/^0$/);
+  expect(celula('1-2')).toHaveTextContent(/^1$/);
+  expect(screen.getByTestId('vazias')).toHaveTextContent(/^25$/);
+
+  // Passo 3: dois cliques em 1-1 (0 -> 1 -> vazia); 1-2 segue 1; contador volta a 26.
+  await user.click(celula('1-1'));
+  await user.click(celula('1-1'));
+  expect(celula('1-1').textContent.trim()).toBe('');
+  expect(celula('1-2')).toHaveTextContent(/^1$/);
+  expect(screen.getByTestId('vazias')).toHaveTextContent(/^26$/);
 });
