@@ -228,6 +228,7 @@ Salvo quando dito outro, os passos partem de células vazias.
 | TC-SB-22 | Grade bloqueada após a vitória | Depois do TC-SB-20: clicar `1-1`; clicar `btn-limpar`; clicar `btn-desfazer` | `1-1` continua "0"; `vazias` continua 0; `mensagem` continua "Resolvido!" |
 | TC-SB-23 | Novo jogo | `PUZZLE_PADRAO`. Preencher `1-1`=0; clicar `btn-novo-jogo` | `1-1` vazia; as 9 fixas iguais ao puzzle; `vazias` = 27; `btn-desfazer` desabilitado; `mensagem` vazia |
 | TC-SB-24 | Conflito também marca células fixas | `PUZZLE_PADRAO`. Preencher `4-2` com 0 (a linha 4 fica `0000..`) | `4-1`, `4-2`, `4-3` e `4-4` com `data-conflito` = `true`, inclusive as fixas `4-1`, `4-3` e `4-4` |
+| TC-SB-25 | Três iguais em todas as combinações e nas bordas | `PUZZLE_VAZIO`. Um caso por vez (`test.each`): (a) `1-1`, `1-2` e `1-3` com 1; (b) `1-1`, `2-1` e `3-1` com 0; (c) `1-4`, `1-5` e `1-6` com 0 (borda direita); (d) `4-6`, `5-6` e `6-6` com 1 (borda inferior) | Em cada caso, as três células mostram o valor e têm `data-conflito` = `true`; nenhuma outra célula em conflito |
 
 ## 6. Fluxo de trabalho no Git
 

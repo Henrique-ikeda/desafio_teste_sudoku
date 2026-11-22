@@ -20,7 +20,7 @@ Regras completas, contrato da tela e divisão das tarefas: [PLANEJAMENTO.md](PLA
 | Nome | RA | GitHub | Parte no trabalho |
 |---|---|---|---|
 | Henrique Kendi Ikeda | 24039456-2 | [Henrique-ikeda](https://github.com/Henrique-ikeda) | Tarefas A1–A5: estrutura do projeto e 12 casos de teste (grade, preenchimento, vazias, limpar e desfazer) |
-| Felipe Galeti Gôngora | 24036480-2 | [FGaleti](https://github.com/FGaleti) | Tarefas F1–F5: CI, README e 12 casos de teste (regras (conflitos), vitória e novo jogo) |
+| Felipe Galeti Gôngora | 24036480-2 | [FGaleti](https://github.com/FGaleti) | Tarefas F1–F5: CI, README e 13 casos de teste (regras (conflitos), vitória e novo jogo) |
 
 As contribuições de cada um aparecem em **Insights → Contributors** e nos commits.
 
@@ -50,7 +50,7 @@ npx jest tests/<arquivo>.spec.js -t "TC-SB-NN"   # um caso só
 - **Metodologia:** TDD, um caso de teste por vez: escrever, rodar, ver falhar pelo motivo certo e fazer o commit `test:`. Uso de IA documentado em [docs/TDD-COM-IA.md](docs/TDD-COM-IA.md).
 - **Integração contínua:** o GitHub Actions ([`.github/workflows/testes.yml`](.github/workflows/testes.yml)) roda `npm ci` e `npm run verificar` em todo push e Pull Request, com Node 18, 20 e 22 no Ubuntu e no Windows. O relatório JSON do Jest e a saída do verificador ficam como artefatos de cada execução. O job `verificar:completo`, que também exige um teste para cada TC do plano, roda sob demanda (*Run workflow*) ou em PR com o rótulo `entrega`.
 
-## Casos de teste (24)
+## Casos de teste (25)
 
 | ID | Cenário | Arquivo | Resultado esperado | Autor |
 |---|---|---|---|---|
@@ -78,6 +78,7 @@ npx jest tests/<arquivo>.spec.js -t "TC-SB-NN"   # um caso só
 | TC-SB-22 | Grade bloqueada após a vitória | `tests/fim-de-jogo.spec.js` | `1-1` continua "0"; `vazias` continua 0; `mensagem` continua "Resolvido!" | Felipe |
 | TC-SB-23 | Novo jogo | `tests/fim-de-jogo.spec.js` | `1-1` vazia; as 9 fixas iguais ao puzzle; `vazias` = 27; `btn-desfazer` desabilitado; `mensagem` vazia | Felipe |
 | TC-SB-24 | Conflito também marca células fixas | `tests/regras.spec.js` | `4-1`, `4-2`, `4-3` e `4-4` com `data-conflito` = `true`, inclusive as fixas `4-1`, `4-3` e `4-4` | Felipe |
+| TC-SB-25 | Três iguais em todas as combinações e nas bordas | `tests/regras.spec.js` | Em cada caso, as três células mostram o valor e têm `data-conflito` = `true`; nenhuma outra célula em conflito | Felipe |
 
 ## Estrutura
 
