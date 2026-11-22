@@ -237,6 +237,7 @@ Salvo quando dito outro, os passos partem de células vazias.
 | TC-SB-30 | Conflito some depois do Limpar | `PUZZLE_VAZIO`. Preencher `1-1`, `1-2` e `1-3` com 0; clicar `btn-limpar` | Antes: as três em conflito. Depois: `1-1`, `1-2` e `1-3` vazias; nenhuma célula em conflito; `vazias` = 36 |
 | TC-SB-31 | Desfazer remove o conflito | `PUZZLE_VAZIO`. Preencher `1-1`, `1-2` e `1-3` com 0; clicar `btn-desfazer` | Antes: as três em conflito. Depois: `1-3` vazia, `1-1` e `1-2` com "0", `vazias` = 34 e nenhuma célula em conflito |
 | TC-SB-32 | Clique direito gera e desfaz conflito, e o Desfazer volta o clique direito | `PUZZLE_VAZIO`. Clique direito em `1-1`, `1-2` e `1-3` (cada uma vira "1"); clique direito de novo em `1-3` (vira "0"); `btn-desfazer` | Após os 3 cliques: as três em conflito. Após o 4º clique: `1-3` = "0" e nenhuma em conflito. Depois de desfazer: `1-3` volta a "1" e as três ficam em conflito |
+| TC-SB-33 | Novo jogo limpa os conflitos | `PUZZLE_VAZIO`. Preencher `1-1`, `1-2` e `1-3` com 0; clicar `btn-novo-jogo` | Antes: as três em conflito. Depois: as três vazias com `data-conflito` = `false`, `vazias` = 36 e nenhuma célula em conflito |
 
 ## 6. Fluxo de trabalho no Git
 
