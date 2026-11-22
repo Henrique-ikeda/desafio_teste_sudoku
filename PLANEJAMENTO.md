@@ -235,6 +235,7 @@ Salvo quando dito outro, os passos partem de células vazias.
 | TC-SB-28 | Conflito de linhas iguais some ao corrigir | `PUZZLE_VAZIO`. Preencher as linhas 1 e 2 com `001011`; clicar `2-6` uma vez (1 → vazia: a linha 2 fica incompleta) | Antes: as 12 células das linhas 1 e 2 em conflito. Depois: `2-6` vazia e nenhuma célula em conflito |
 | TC-SB-29 | Novo jogo depois da vitória desbloqueia o jogo | `PUZZLE_PADRAO`. Preencher as 27 vazias com a `SOLUCAO_PADRAO` (vitória); clicar `btn-novo-jogo`; clicar `1-1` | `mensagem` vazia; `1-1` = "0"; `vazias` = 26; `btn-desfazer` habilitado |
 | TC-SB-30 | Conflito some depois do Limpar | `PUZZLE_VAZIO`. Preencher `1-1`, `1-2` e `1-3` com 0; clicar `btn-limpar` | Antes: as três em conflito. Depois: `1-1`, `1-2` e `1-3` vazias; nenhuma célula em conflito; `vazias` = 36 |
+| TC-SB-31 | Desfazer remove o conflito | `PUZZLE_VAZIO`. Preencher `1-1`, `1-2` e `1-3` com 0; clicar `btn-desfazer` | Antes: as três em conflito. Depois: `1-3` vazia, `1-1` e `1-2` com "0", `vazias` = 34 e nenhuma célula em conflito |
 
 ## 6. Fluxo de trabalho no Git
 
