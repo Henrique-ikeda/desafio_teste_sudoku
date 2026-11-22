@@ -179,3 +179,17 @@ test.each(GRADES_CHEIAS_COM_ERRO)('TC-SB-43 grade cheia com trinca ou com linhas
   expect(btn('mensagem')).toHaveTextContent(/^$/);
   esperarConflitos(conflitos);
 });
+
+test('TC-SB-44 vitória quando a última jogada é um 1', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_PADRAO });
+  for (const pos of VAZIAS_PADRAO.filter((p) => p !== '1-3')) await preencher(user, pos, solucao(pos));
+  expect(btn('vazias')).toHaveTextContent(/^1$/);
+  expect(btn('mensagem')).toHaveTextContent(/^$/);
+
+  await preencher(user, '1-3', solucao('1-3'));
+  expect(celula('1-3')).toHaveTextContent(/^1$/);
+  expect(gradeNaTela()).toBe(SOLUCAO_PADRAO);
+  expect(btn('mensagem')).toHaveTextContent(/^Resolvido!$/);
+  expect(btn('vazias')).toHaveTextContent(/^0$/);
+  esperarConflitos([]);
+});
