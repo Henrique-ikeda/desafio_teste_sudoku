@@ -58,3 +58,13 @@ test('TC-SB-33 novo jogo limpa os conflitos', async () => {
   expect(btn('vazias')).toHaveTextContent(/^36$/);
   esperarConflitos([]);
 });
+
+test('TC-SB-34 vitória preenchendo só com o clique direito', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_PADRAO });
+  for (const pos of VAZIAS_PADRAO) await preencherDireito(user, pos, solucao(pos));
+
+  expect(gradeNaTela()).toBe(SOLUCAO_PADRAO);
+  expect(btn('mensagem')).toHaveTextContent(/^Resolvido!$/);
+  expect(btn('vazias')).toHaveTextContent(/^0$/);
+  esperarConflitos([]);
+});
