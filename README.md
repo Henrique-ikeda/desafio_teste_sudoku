@@ -8,8 +8,8 @@ Desafio de testes: casos de teste para testar o **Sudoku binário** de tamanho *
 
 - Grade de 6 × 6 células; cada célula fica vazia, com 0 ou com 1.
 - Nunca três números iguais seguidos numa linha ou coluna.
-- Cada linha e cada coluna tem exatamente três 0 e três 1.
-- Não pode haver duas linhas iguais nem duas colunas iguais.
+- Cada linha e cada coluna tem exatamente três 0 e três 1; ter mais de três de um número já é erro, mesmo com a linha ou a coluna incompleta.
+- Não pode haver duas linhas completas iguais nem duas colunas completas iguais.
 - Células fixas do puzzle não mudam; clique esquerdo alterna vazia → 0 → 1 → vazia, clique direito alterna ao contrário.
 - Conflitos aparecem na hora; grade cheia e sem conflito = "Resolvido!". Há os botões Limpar, Desfazer e Novo jogo.
 
@@ -20,7 +20,7 @@ Regras completas, contrato da tela e divisão das tarefas: [PLANEJAMENTO.md](PLA
 | Nome | RA | GitHub | Parte no trabalho |
 |---|---|---|---|
 | Henrique Kendi Ikeda | 24039456-2 | [Henrique-ikeda](https://github.com/Henrique-ikeda) | Tarefas A1–A5: estrutura do projeto e 12 casos de teste (grade, preenchimento, vazias, limpar e desfazer) |
-| Felipe Galeti Gôngora | 24036480-2 | [FGaleti](https://github.com/FGaleti) | Tarefas F1–F5: CI, README e 18 casos de teste (regras (conflitos), vitória e novo jogo) |
+| Felipe Galeti Gôngora | 24036480-2 | [FGaleti](https://github.com/FGaleti) | Tarefas F1–F5: CI, README e 36 casos de teste (regras (conflitos), vitória e novo jogo) |
 
 As contribuições de cada um aparecem em **Insights → Contributors** e nos commits.
 
@@ -50,7 +50,7 @@ npx jest tests/<arquivo>.spec.js -t "TC-SB-NN"   # um caso só
 - **Metodologia:** TDD, um caso de teste por vez: escrever, rodar, ver falhar pelo motivo certo e fazer o commit `test:`. Uso de IA documentado em [docs/TDD-COM-IA.md](docs/TDD-COM-IA.md).
 - **Integração contínua:** o GitHub Actions ([`.github/workflows/testes.yml`](.github/workflows/testes.yml)) roda `npm ci` e `npm run verificar` em todo push e Pull Request, com Node 18, 20 e 22 no Ubuntu e no Windows. O relatório JSON do Jest e a saída do verificador ficam como artefatos de cada execução. O job `verificar:completo`, que também exige um teste para cada TC do plano, roda sob demanda (*Run workflow*) ou em PR com o rótulo `entrega`.
 
-## Casos de teste (30)
+## Casos de teste (48)
 
 | ID | Cenário | Arquivo | Resultado esperado | Autor |
 |---|---|---|---|---|
@@ -84,6 +84,24 @@ npx jest tests/<arquivo>.spec.js -t "TC-SB-NN"   # um caso só
 | TC-SB-28 | Conflito de linhas iguais some ao corrigir | `tests/regras.spec.js` | Antes: as 12 células das linhas 1 e 2 em conflito. Depois: `2-6` vazia e nenhuma célula em conflito | Felipe |
 | TC-SB-29 | Novo jogo depois da vitória desbloqueia o jogo | `tests/fim-de-jogo.spec.js` | `mensagem` vazia; `1-1` = "0"; `vazias` = 26; `btn-desfazer` habilitado | Felipe |
 | TC-SB-30 | Conflito some depois do Limpar | `tests/regras.spec.js` | Antes: as três em conflito. Depois: `1-1`, `1-2` e `1-3` vazias; nenhuma célula em conflito; `vazias` = 36 | Felipe |
+| TC-SB-31 | Desfazer remove o conflito | `tests/lacunas-felipe.spec.js` | Antes: as três em conflito. Depois: `1-3` vazia, `1-1` e `1-2` com "0", `vazias` = 34 e nenhuma célula em conflito | Felipe |
+| TC-SB-32 | Clique direito gera e desfaz conflito, e o Desfazer volta o clique direito | `tests/lacunas-felipe.spec.js` | Após os 3 cliques: as três em conflito. Após o 4º clique: `1-3` = "0" e nenhuma em conflito. Depois de desfazer: `1-3` volta a "1" e as três ficam em conflito | Felipe |
+| TC-SB-33 | Novo jogo limpa os conflitos | `tests/lacunas-felipe.spec.js` | Antes: as três em conflito. Depois: as três vazias com `data-conflito` = `false`, `vazias` = 36 e nenhuma célula em conflito | Felipe |
+| TC-SB-34 | Vitória preenchendo só com o clique direito | `tests/lacunas-felipe.spec.js` | As 36 células iguais à `SOLUCAO_PADRAO`; `mensagem` = "Resolvido!"; `vazias` = 0; nenhuma célula em conflito | Felipe |
+| TC-SB-35 | Mais de três 0 na última linha e na última coluna | `tests/lacunas-felipe.spec.js` | Em cada caso, as quatro células mostram "0" e têm `data-conflito` = `true`; nenhuma outra célula em conflito | Felipe |
+| TC-SB-36 | Mais de três com cinco 0 na linha | `tests/lacunas-felipe.spec.js` | As cinco com `data-conflito` = `true`, `1-3` vazia com `false`; nenhuma outra célula em conflito | Felipe |
+| TC-SB-37 | Linhas e colunas completas iguais, mesmo longe uma da outra | `tests/lacunas-felipe.spec.js` | Em cada caso, as 12 células das duas linhas (ou colunas) mostram o valor e têm `data-conflito` = `true`; nenhuma outra célula em conflito | Felipe |
+| TC-SB-38 | Linhas iguais marcam também as células fixas | `tests/lacunas-felipe.spec.js` | `2-6` = "1" e `vazias` = 24; as 12 células das linhas 1 e 2 com `data-conflito` = `true`, inclusive as 11 fixas (`data-fixa` = `true`); nenhuma outra | Felipe |
+| TC-SB-39 | Célula fixa de valor 0 não muda | `tests/lacunas-felipe.spec.js` | `4-1` e `6-6` continuam "0" com `data-fixa` = `true`; `vazias` continua 27; `btn-desfazer` continua desabilitado | Felipe |
+| TC-SB-40 | Três iguais no meio da linha e da coluna | `tests/lacunas-felipe.spec.js` | Em cada caso, as três células mostram o valor e têm `data-conflito` = `true`; nenhuma outra célula em conflito | Felipe |
+| TC-SB-41 | A trinca marca só as três iguais, não o vizinho diferente | `tests/lacunas-felipe.spec.js` | `1-1`, `1-2` e `1-3` com `data-conflito` = `true`; `1-4` mostra "1" com `false`; nenhuma outra célula em conflito | Felipe |
+| TC-SB-42 | Some a trinca mas o excesso continua | `tests/lacunas-felipe.spec.js` | Antes: `1-1` a `1-5` em conflito (trinca e excesso). Depois: a linha fica `001001` (quatro 0, sem trinca); só `1-1`, `1-2`, `1-4` e `1-5` seguem em conflito (excesso); `1-3` e `1-6` mostram "1" sem conflito | Felipe |
+| TC-SB-43 | Grade cheia com trinca ou com linhas ou colunas repetidas não vence | `tests/lacunas-felipe.spec.js` | Em cada caso, `vazias` = 0 e `mensagem` vazia; só as células da regra quebrada em conflito: (a) `6-2`, `6-3` e `6-4`; (b) as 12 das linhas 3 e 6; (c) as 12 das colunas 1 e 3 | Felipe |
+| TC-SB-44 | Vitória quando a última jogada é um 1 | `tests/lacunas-felipe.spec.js` | Com 26 preenchidas: `vazias` = 1 e `mensagem` vazia. Depois de `1-3` = "1": `mensagem` = "Resolvido!", `vazias` = 0, as 36 células iguais à `SOLUCAO_PADRAO` e nenhuma em conflito | Felipe |
+| TC-SB-45 | Depois da vitória, nenhuma célula muda | `tests/lacunas-felipe.spec.js` | As 36 células continuam iguais à `SOLUCAO_PADRAO`; `vazias` = 0; `mensagem` continua "Resolvido!" | Felipe |
+| TC-SB-46 | Trinca na coluna marca também a célula fixa | `tests/lacunas-felipe.spec.js` | `2-1`, `3-1` e a fixa `4-1` (`data-fixa` = `true`) com `data-conflito` = `true`; nenhuma outra célula em conflito | Felipe |
+| TC-SB-47 | Dois conflitos independentes | `tests/lacunas-felipe.spec.js` | Com os dois: as seis em conflito. Depois de corrigir o primeiro: só `4-4`, `5-4` e `6-4`. Depois de corrigir o segundo: nenhuma | Felipe |
+| TC-SB-48 | Linhas que diferem só na última célula não são repetidas | `tests/lacunas-felipe.spec.js` | Só `2-1`, `2-2`, `2-4` e `2-6` em conflito (a linha 2 tem quatro 0); a repetição não dispara: as outras 8 células das duas linhas mostram o valor com `data-conflito` = `false` | Felipe |
 
 ## Estrutura
 
