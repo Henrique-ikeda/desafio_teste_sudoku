@@ -1,5 +1,5 @@
 // Casos de teste das regras (conflitos) — tarefas F2, F3 e F4 do Felipe. Contrato: seções 1, 3 e 5 do PLANEJAMENTO.md.
-import { abrirJogo, celula, preencher, celulasEmConflito, screen, PUZZLE_PADRAO, PUZZLE_VAZIO } from './helpers.js';
+import { abrirJogo, celula, preencher, preencherLinha, preencherColuna, celulasEmConflito, screen, PUZZLE_PADRAO, PUZZLE_VAZIO } from './helpers.js';
 
 // Posições 'L-C' das células com data-conflito = "true", em ordem: para conferir o conjunto EXATO
 // (pega implementação que marca demais, como a linha inteira, ou de menos).
@@ -177,4 +177,57 @@ test('TC-SB-30 conflito some depois do Limpar', async () => {
   }
   expect(posicoesEmConflito()).toEqual([]);
   expect(screen.getByTestId('vazias')).toHaveTextContent(/^36$/);
+});
+
+// Linhas 1 e 2 (ou colunas 1 e 2) iguais e completas: 001011 não tem trinca nem excesso,
+// então o único conflito possível é a repetição (regra 3).
+const LINHA_REPETIDA = '001011';
+const posicoesDasLinhas = (...linhas) => linhas.flatMap((l) => [1, 2, 3, 4, 5, 6].map((c) => `${l}-${c}`));
+
+test('TC-SB-17 duas linhas completas iguais', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  await preencherLinha(user, 1, LINHA_REPETIDA);
+  await preencherLinha(user, 2, LINHA_REPETIDA);
+
+  for (const l of [1, 2]) {
+    for (let c = 1; c <= 6; c++) {
+      expect(celula(`${l}-${c}`)).toHaveTextContent(new RegExp(`^${LINHA_REPETIDA[c - 1]}$`));
+      expect(celula(`${l}-${c}`)).toHaveAttribute('data-conflito', 'true');
+    }
+  }
+  expect(posicoesEmConflito()).toEqual(posicoesDasLinhas(1, 2).sort());
+});
+
+const posicoesDasColunas = (...colunas) => colunas.flatMap((c) => [1, 2, 3, 4, 5, 6].map((l) => `${l}-${c}`));
+
+test('TC-SB-18 duas colunas completas iguais', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  await preencherColuna(user, 1, LINHA_REPETIDA); // de cima para baixo
+  await preencherColuna(user, 2, LINHA_REPETIDA);
+
+  for (const c of [1, 2]) {
+    for (let l = 1; l <= 6; l++) {
+      expect(celula(`${l}-${c}`)).toHaveTextContent(new RegExp(`^${LINHA_REPETIDA[l - 1]}$`));
+      expect(celula(`${l}-${c}`)).toHaveAttribute('data-conflito', 'true');
+    }
+  }
+  expect(posicoesEmConflito()).toEqual(posicoesDasColunas(1, 2).sort());
+});
+
+test('TC-SB-28 conflito de linhas iguais some ao corrigir', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_VAZIO });
+  await preencherLinha(user, 1, LINHA_REPETIDA);
+  await preencherLinha(user, 2, LINHA_REPETIDA);
+
+  // Antes: as 12 células das linhas 1 e 2 em conflito.
+  expect(posicoesEmConflito()).toEqual(posicoesDasLinhas(1, 2).sort());
+
+  // 2-6 vai de 1 para vazia: a linha 2 fica incompleta e deixa de contar.
+  await user.click(celula('2-6'));
+
+  // Depois: 2-6 vazia, o resto da linha 2 continua, e nada em conflito.
+  expect(celula('2-6')).toHaveTextContent(/^$/);
+  expect(celula('2-6')).toHaveAttribute('data-conflito', 'false');
+  expect(celula('2-5')).toHaveTextContent(/^1$/);
+  expect(posicoesEmConflito()).toEqual([]);
 });
