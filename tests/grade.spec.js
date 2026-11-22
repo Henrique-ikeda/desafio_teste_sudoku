@@ -167,3 +167,27 @@ test('TC-SB-04 ciclo do clique esquerdo', async () => {
     expect(celula('1-1')).toHaveAttribute('data-fixa', 'false');
   }
 });
+
+test('TC-SB-05 ciclo do clique direito', async () => {
+  // PUZZLE_PADRAO: 27 vazias. Clique direito em 1-1 alterna: vazia -> 1 -> 0 -> vazia.
+  // Cada passo: texto esperado da célula e contador de vazias depois do clique.
+  const user = await abrirJogo({ puzzle: PUZZLE_PADRAO });
+
+  const passos = [
+    { texto: '1', vazias: 26 },
+    { texto: '0', vazias: 26 },
+    { texto: '', vazias: 27 },
+  ];
+
+  for (const { texto, vazias } of passos) {
+    await cliqueDireito(user, celula('1-1'));
+
+    if (texto === '') {
+      expect(celula('1-1').textContent.trim()).toBe('');
+    } else {
+      expect(celula('1-1')).toHaveTextContent(new RegExp(`^${texto}$`));
+    }
+    expect(screen.getByTestId('vazias')).toHaveTextContent(new RegExp(`^${vazias}$`));
+    expect(celula('1-1')).toHaveAttribute('data-fixa', 'false');
+  }
+});
