@@ -193,3 +193,17 @@ test('TC-SB-44 vitória quando a última jogada é um 1', async () => {
   expect(btn('vazias')).toHaveTextContent(/^0$/);
   esperarConflitos([]);
 });
+
+test('TC-SB-45 depois da vitória, nenhuma célula muda', async () => {
+  const user = await abrirJogo({ puzzle: PUZZLE_PADRAO });
+  for (const pos of VAZIAS_PADRAO) await preencher(user, pos, solucao(pos));
+  expect(btn('mensagem')).toHaveTextContent(/^Resolvido!$/);
+
+  for (const pos of ['3-1', '5-5', '6-5', '4-1']) {
+    await user.click(celula(pos));
+    await cliqueDireito(user, celula(pos));
+  }
+  expect(gradeNaTela()).toBe(SOLUCAO_PADRAO);
+  expect(btn('vazias')).toHaveTextContent(/^0$/);
+  expect(btn('mensagem')).toHaveTextContent(/^Resolvido!$/);
+});
