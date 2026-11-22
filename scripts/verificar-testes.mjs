@@ -21,7 +21,7 @@ const semCor = (s) => String(s ?? '').replace(/\x1b\[[0-9;]*m/g, '');
 const primeiraLinha = (s) => semCor(s).trim().split('\n')[0].slice(0, 160);
 
 export function verificar(raiz, { completo = false } = {}) {
-  // Roda o Jest pelo próprio node: no Windows, spawnSync de `jest.cmd` sem shell dá EINVAL (Node ≥ 18.20.2/20.12.2).
+  // Roda o Jest pelo próprio node (sem `jest.cmd`): no Windows, spawnSync de um .cmd sem shell dá EINVAL.
   const bin = join(raiz, 'node_modules', 'jest', 'bin', 'jest.js');
   if (!existsSync(bin)) return { ok: false, semSetup: true, texto: 'Jest não instalado: rode `npm install` (o setup vem da tarefa A1).' };
 
